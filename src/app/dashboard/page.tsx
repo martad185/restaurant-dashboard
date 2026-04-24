@@ -1,19 +1,28 @@
 import { createClient } from '@/lib/supabase/server';
 import { KPICards } from '@/components/dashboard/kpi-cards';
 import { SalesChart } from '@/components/dashboard/sales-chart';
-import { format, subDays } from 'date-fns';
+import { DateRangePicker } from "@/components/dashboard/date-range-picker";
+import { subDays, startOfDay, endOfDay } from 'date-fns';
 
-export default async function DashboardPage() {
-  const supabase = await createClient();
+interface PageProps {
+    searchParams: Promise<{ from?: string, to?: string }>;
+}
+
+export default async function DashboardPage({ searchParams }: PageProps) {
+    const supabase = await createClient();
+    const params = await searchParams;
 
   // 1. Fetch sales data for the last 30 days
   // RLS will automatically filter by the user's restaurant_id
-  const thirtyDaysAgo = subDays(new Date(), 30).toISOString();
+    const thirtyDaysAgo = subDays(new Date(), 30).toISOString();
+    const from = params?.from ? startOfDay(new Date(params.from)).toISOString() : thirtyDaysAgo;
+    const to = params?.to ? endOfDay(new Date(params.to)).toISOString() : new Date().toISOString();
   
   const { data: salesData, error } = await supabase
     .from('sales_items')
     .select('time_ord, gross, net')
-    .gte('time_ord', thirtyDaysAgo)
+      .gte('time_ord', from)
+      .lte('time_ord', to)
     .order('time_ord', { ascending: true });
 
   if (error) {
@@ -24,7 +33,8 @@ export default async function DashboardPage() {
     <main className="p-8 space-y-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Sales Overview</h1>
-        {/* Date Range Picker Component would go here */}
+              {/* Date Range Picker Component would go here */}
+              <DateRangePicker />
       </div>
 
       <KPICards data={salesData} />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -35,11 +36,10 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Restaurant Dashboard
-        </h1>
-        
+          <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+              <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+                  <Image src="/logo.png" alt="Slowey Sales App" width={48} height={48} />
+              </h1>        
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
