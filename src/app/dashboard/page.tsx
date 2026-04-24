@@ -11,10 +11,10 @@ export default async function DashboardPage() {
   const thirtyDaysAgo = subDays(new Date(), 30).toISOString();
   
   const { data: salesData, error } = await supabase
-    .from('orders')
-    .select('created_at, total_amount, net_amount, status')
-    .gte('created_at', thirtyDaysAgo)
-    .order('created_at', { ascending: true });
+    .from('sales_items')
+    .select('time_ord, gross, net')
+    .gte('time_ord', thirtyDaysAgo)
+    .order('time_ord', { ascending: true });
 
   if (error) {
     return <div className="p-8 text-red-500">Error loading dashboard: {error.message}</div>;
