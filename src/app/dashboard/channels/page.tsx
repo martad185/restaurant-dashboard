@@ -11,8 +11,7 @@ export default async function ChannelsPage() {
   // Fetch all orders - filtering out modifiers
   const { data, error } = await supabase
     .from('sales_items')
-    .select('gross, channel,id')
-    .is('parent_id', null);
+    .select('gross, channel, id, transact');
 
   if (error) return <div className="p-8 text-red-500">Error: {error.message}</div>;
 

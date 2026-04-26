@@ -14,9 +14,10 @@ import {
 interface Sales_Items {
     gross: number;
     channel: string;
+    transact: string | number;
 }
 
-// 1. Define the shape of a single channel's stats
+// Define the shape of a single channel's stats
 interface ChannelMetric {
     channel: string;
     gross: number;
@@ -24,26 +25,44 @@ interface ChannelMetric {
     avg: number;
 }
 
+//Temporary interface for the accumulator to track unique IDs
+interface Accumulator {
+    name: string;
+    gross: number;
+    transactionIds: Set<string | number>;
+}
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
 
 export function ChannelCharts({ data }: { data: Sales_Items[] }) {
-    // 1. Transform data for the chart and table
-    const channelMetrics = data.reduce<Record<string, ChannelMetric>>((acc, sales) => {
+
+    //Group data and track unique transaction IDs per channel
+    const channelGroups = data.reduce<Record<string, Accumulator>>((acc, sales) => {
         const channel = sales.channel || 'Unknown';
+
         if (!acc[channel]) {
-            acc[channel] = { channel: channel, gross: 0, count: 0, avg: 0 };
+            acc[channel] = {
+                name: channel,
+                gross: 0,
+                transactionIds: new Set()
+            };
         }
         acc[channel].gross += sales.gross;
-        acc[channel].count += 1;
-        acc[channel].avg = acc[channel].gross / acc[channel].count;
+        acc[channel].transactionIds.add(sales.transact); // Add ID to the Set
+
         return acc;
     }, {});
-
-    const chartData = Object.values(channelMetrics).map(item => ({
-        ...item,
-        avg: item.gross / item.count
-    }));
+    //  Transform data for the chart and table
+   
+    const chartData: ChannelMetric[] = Object.values(channelGroups).map((item) => { 
+        const uniqueCount = item.transactionIds.size;
+        return {
+            channel: item.name,
+            gross: item.gross,
+            count: uniqueCount,
+            avg: uniqueCount > 0 ? item.gross / uniqueCount : 0
+        };
+    });
 
     return (
         <div className="space-y-8">
@@ -89,7 +108,7 @@ export function ChannelCharts({ data }: { data: Sales_Items[] }) {
                             <th className="p-4 text-xs font-semibold text-gray-600 uppercase">Channel</th>
                             <th className="p-4 text-xs font-semibold text-gray-600 uppercase">Transactions</th>
                             <th className="p-4 text-xs font-semibold text-gray-600 uppercase">Gross Sales</th>
-                            <th className="p-4 text-xs font-semibold text-gray-600 uppercase">Avg. Order Value</th>
+                            <th className="p-4 text-xs font-semibold text-gray-600 uppercase">Avg. Transaction Value</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y">
