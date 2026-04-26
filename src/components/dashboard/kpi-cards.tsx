@@ -1,14 +1,19 @@
 interface Sales_Items {
   gross: number;
   net: number;
+  transact: string | number;
 }
 
 export function KPICards({ data }: { data: Sales_Items[] }) {
   // Aggregate data
   const grossRevenue = data.reduce((sum, sales) => sum + (sales.gross || 0), 0);
   const netRevenue = data.reduce((sum, sales) => sum + (sales.net || 0), 0);
-  const salesItemCount = data.length;
-  const avgOrderValue = salesItemCount > 0 ? grossRevenue / salesItemCount : 0;
+
+  const uniqueTransactions = new Set(data.map((item) => item.transact));
+  const transactionCount = uniqueTransactions.size;
+
+  const avgTransactionValue = transactionCount > 0 ? grossRevenue / transactionCount : 0; 
+
 
   const stats = [
     {
@@ -20,12 +25,12 @@ export function KPICards({ data }: { data: Sales_Items[] }) {
       value: `$${netRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
     },
     {
-      name: 'Items Sold',
-      value: salesItemCount.toString(),
+        name: 'Transactions',
+        value: transactionCount.toString(),
     },
     {
-      name: 'Avg Sales per Item Value',
-      value: `$${avgOrderValue.toFixed(2)}`,
+        name: 'Avg Sales per Tranasction',
+        value: `$${avgTransactionValue.toFixed(2)}`,
     },
   ];
 

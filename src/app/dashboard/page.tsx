@@ -20,7 +20,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   
   const { data: salesData, error } = await supabase
     .from('sales_items')
-    .select('time_ord, gross, net')
+    .select('time_ord, gross, net, transact')
       .gte('time_ord', from)
       .lte('time_ord', to)
     .order('time_ord', { ascending: true });

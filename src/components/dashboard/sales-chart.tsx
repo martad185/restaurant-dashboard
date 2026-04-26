@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { 
   LineChart, 
   Line, 
@@ -7,7 +8,8 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer 
+    ResponsiveContainer,
+  Cell
 } from 'recharts';
 import { format, parseISO } from 'date-fns';
 
@@ -22,11 +24,19 @@ export interface ChartDataPoint {
     amount: number;
 }
 
+interface ChartClickState {
+    activeLabel?: string; // This is the 'date' from your XAxis
+    activePayload?: Array<{
+        payload: ChartDataPoint;
+    }>;
+}
+
 export function SalesChart({ data }: { data: Sales_Items[] }) {
 
+    const router = useRouter();
     // 3. Use Record<string, ChartDataPoint> to tell TS exactly what the accumulator is
     const groupedData = data.reduce<Record<string, ChartDataPoint>>((acc, sales) => {
-        const day = format(parseISO(sales.time_ord), 'MMM dd');
+        const day = format(parseISO(sales.time_ord), 'yyyy-MM-dd');
 
         if (!acc[day]) {
             acc[day] = { date: day, amount: 0 };
@@ -37,7 +47,22 @@ export function SalesChart({ data }: { data: Sales_Items[] }) {
     }, {});
 
   // 2. Convert object back to array for Recharts
-  const chartData = Object.values(groupedData);
+    const chartData = Object.values(groupedData);
+
+
+
+    // Handle the click event
+    const handleClick = (state: ChartClickState) => {
+        if (state && state.activeLabel) {
+            // Assuming activeLabel is the date string (e.g., "2026-04-20")
+            const selectedDate = state.activeLabel;
+
+            // Navigate to channels page with the date filter in the URL
+            router.push(`/dashboard/channels?from=${selectedDate}&to=${selectedDate}`);
+        }
+    };
+
+
 
   return (
     <div className="h-[350px] w-full bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
@@ -45,7 +70,10 @@ export function SalesChart({ data }: { data: Sales_Items[] }) {
         Revenue Trend (Last 30 Days)
       </h3>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData}>
+              <LineChart
+                  data={chartData}
+                  onClick={(nextState) => handleClick(nextState as ChartClickState)} // Attach the click handler to the chart
+              >
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
           <XAxis 
             dataKey="date" 
