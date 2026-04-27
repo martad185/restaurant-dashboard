@@ -31,8 +31,8 @@ export function Sidebar() {
             {/* Mobile Header: Only visible on small screens */}
             <div className="md:hidden flex items-center justify-between p-4 bg-white border-b sticky top-0 z-50">
                 <h2 className="text-xl font-bold text-blue-600 flex items-center gap-2">
-                    <UtensilsCrossed size={20} />
-                    RestoDash
+                   {/* <UtensilsCrossed size={20} /> */}
+                    Slowey Sales App
                 </h2>
                 <button onClick={toggleSidebar} className="p-2 text-gray-600">
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -55,8 +55,8 @@ export function Sidebar() {
       `}>
                 <div className="p-6">
                     <h2 className="text-xl font-bold text-blue-600 hidden md:flex items-center gap-2">
-                        <UtensilsCrossed size={24} />
-                        RestoDash
+                        {/* <UtensilsCrossed size={24} /> */}
+                        Slowey Sales App
                     </h2>
                 </div>
 
