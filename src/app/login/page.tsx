@@ -40,7 +40,7 @@ export default function LoginPage() {
           {
               setError("User role not found or error fetching role." + authData.user.id);
               setLoading(false);
-          } else if (userRole.role == "master") {
+          } else if (userRole.role == 'master') {
               router.push('/portals');
               router.refresh();
           }
