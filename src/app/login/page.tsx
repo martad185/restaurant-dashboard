@@ -33,6 +33,7 @@ export default function LoginPage() {
               .from("restaurant_members")
               .select("role")
               .eq('user_id', authData.user.id)           
+              .limit(1)
               .single();
 
           if (userError)
