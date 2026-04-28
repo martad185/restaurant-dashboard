@@ -5,15 +5,15 @@ import Link from 'next/link';
 import { Store, ArrowRight, TrendingUp } from 'lucide-react';
 
 
-interface OrderSummary {
-    total_amount: number;
+interface SalesSummary {
+    gross: number;
 }
 
-interface RestaurantWithOrders {
+interface RestaurantWithSales {
     id: string;
     name: string;
     slug: string;
-    orders: OrderSummary[];
+    sales: SalesSummary[];
 }
 
 interface RestaurantSalesMetric {
@@ -38,22 +38,21 @@ export default async function SalesPortalPage() {
       id,
       name,
       slug,
-      orders (
-        total_amount
+      sales_items (
+        gross
       )
     `)
-        .filter('orders.created_at', 'gte', todayStart)
-        .filter('orders.created_at', 'lte', todayEnd)
-        .is('orders.parent_id', null);
+        .filter('sales_items.created_at', 'gte', todayStart)
+        .filter('sales_items.created_at', 'lte', todayEnd);
 
     if (error) return <div className="p-8 text-red-500">Error: {error.message}</div>;
 
     // Cast the raw data to our interface
-    const rawRestaurants = (data as unknown) as RestaurantWithOrders[];
+    const rawRestaurants = (data as unknown) as RestaurantWithSales[];
 
     // Process data with strict typing
     const restaurantSales: RestaurantSalesMetric[] = rawRestaurants.map((res) => {
-        const total = res.orders.reduce((sum, order) => sum + order.total_amount, 0);
+        const total = res.sales.reduce((sum, sale) => sum + sale.gross, 0);
         return {
             id: res.id,
             name: res.name,
