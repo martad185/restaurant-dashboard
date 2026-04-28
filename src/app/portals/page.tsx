@@ -1,7 +1,24 @@
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
+import { router } from 'next/navigation';
 import { LayoutDashboard, Users, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export default function PortalSelect() {
+
+    const handleSignOut = async () => {
+        const supabase = createClient();
+
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error('Error signing out:', error.message);
+        } else {
+            // Clear the router cache and redirect to login
+            router.refresh();
+            router.push('/login');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
             {/* Header */}
@@ -18,7 +35,7 @@ export default function PortalSelect() {
 
                 {/* Sales Portal Option */}
                 <Link
-                    href="/sales"
+                    href="/portals/sales"
                     className="group relative bg-white p-8 rounded-2xl border-2 border-transparent hover:border-blue-500 shadow-sm transition-all duration-300 flex flex-col items-start"
                 >
                     <div className="p-4 bg-blue-50 rounded-xl mb-6 group-hover:bg-blue-100 transition-colors">
@@ -35,25 +52,27 @@ export default function PortalSelect() {
 
                 {/* Users Portal Option */}
                 <Link
-                    href="/users"
-                    className="group relative bg-white p-8 rounded-2xl border-2 border-transparent hover:border-purple-500 shadow-sm transition-all duration-300 flex flex-col items-start"
+                    href="/portals/users"
+                    className="group relative bg-white p-8 rounded-2xl border-2 border-transparent hover:border-blue-500 shadow-sm transition-all duration-300 flex flex-col items-start"
                 >
-                    <div className="p-4 bg-purple-50 rounded-xl mb-6 group-hover:bg-purple-100 transition-colors">
-                        <Users className="text-purple-600" size={28} />
+                    <div className="p-4 bg-blue-50 rounded-xl mb-6 group-hover:bg-blue-100 transition-colors">
+                        <Users className="text-blue-600" size={28} />
                     </div>
                     <h2 className="text-xl font-bold text-gray-900 mb-2">User Management</h2>
                     <p className="text-gray-500 text-sm mb-6 leading-relaxed">
                         Add new accounts and users.
                     </p>
-                    <div className="mt-auto flex items-center text-purple-600 font-semibold text-sm">
-                        Manage Team <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    <div className="mt-auto flex items-center text-blue-600 font-semibold text-sm">
+                        Manage Users <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
                 </Link>
 
             </div>
 
             {/* Footer link */}
-            <button className="mt-12 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+            <button
+                onClick={handleSignOut}
+                className="mt-12 text-sm text-gray-400 hover:text-red-500 hover:font-semibold transition-all duration-200 flex items-center gap-2">
                 Sign out of Master Account
             </button>
         </div>

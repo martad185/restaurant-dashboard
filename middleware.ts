@@ -31,6 +31,10 @@ export async function middleware(request: NextRequest) {
     if (!session && request.nextUrl.pathname.startsWith("/dashboard")) {
         return NextResponse.redirect(new URL("/login", request.url))
     }
+
+    if (!session && request.nextUrl.pathname.startsWith('/portals')) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
     return response
 }
 export const config = { matcher: ['/dashboard/:path*'] }
