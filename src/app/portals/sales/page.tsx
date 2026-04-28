@@ -3,12 +3,14 @@ import { redirect } from 'next/navigation';
 import { startOfDay, endOfDay, format } from 'date-fns';
 import { SalesListClient } from '@/components/dashboard/sales-list-client';
 
-
-interface RestaurantSales {
-    id: number;
+// Define the shape of the database join
+interface RawRestaurantData {
+    id: string;
     name: string;
     slug: string;
-    sales: { gross: number; }[];
+    sales: {
+        total_amount: number;
+    }[];
 }
 
 export default async function SalesPortalPage() {
@@ -22,20 +24,21 @@ export default async function SalesPortalPage() {
 
     const { data, error } = await supabase
         .from('restaurants')
-        .select('id, name, slug, sales_items(gross)')
-        .filter('sales_items.time_ord', 'gte', todayStart)
-        .filter('sales_items.time_ord', 'lte', todayEnd);
+        .select('id, name, slug, orders(total_amount)')
+        .filter('orders.created_at', 'gte', todayStart)
+        .filter('orders.created_at', 'lte', todayEnd)
+        .is('orders.parent_id', null);
 
-    if (error) return <div className="p-4">Error loading data.</div>;
+    if (error) return <div className="p-4 text-red-500">Error: {error.message}</div>;
 
-    const rawData = (data as unknown) as RestaurantSales[];
-   
+    // Cast the raw data to our interface safely
+    const rawData = (data as unknown) as RawRestaurantData[];
 
     const restaurantSales = rawData.map((res) => ({
         id: res.id,
         name: res.name,
         slug: res.slug,
-        todayTotal: res.sales.reduce((sum: number, s) => sum + s.gross, 0)
+        todayTotal: res.sales.reduce((sum, o) => sum + o.total_amount, 0)
     })).sort((a, b) => a.name.localeCompare(b.name));
 
     return <SalesListClient initialData={restaurantSales} dayName={dayName} />;
