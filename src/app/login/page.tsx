@@ -38,7 +38,7 @@ export default function LoginPage() {
 
           if (userError)
           {
-              setError("User role not found or error fetching role.");
+              setError("User role not found or error fetching role." + authData.user.id);
               setLoading(false);
           } else if (userRole.role == "master") {
               router.push('/portals');
