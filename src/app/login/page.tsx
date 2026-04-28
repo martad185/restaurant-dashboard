@@ -32,8 +32,7 @@ export default function LoginPage() {
           const { data: userRole, error: userError } = await supabase
               .from("restaurant_members")
               .select("role")
-              .eq('user_id', authData.user.id)
-              .limit(1)             
+              .eq('user_id', authData.user.id)           
               .single();
 
           if (userError)
