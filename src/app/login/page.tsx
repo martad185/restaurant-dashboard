@@ -32,12 +32,15 @@ export default function LoginPage() {
           const { data: userRole, error: userError } = await supabase
               .from("restaurant_members")
               .select("role")
-              .eq('user_id', authData.user.id);
+              .eq('user_id', authData.user.id)
+              .limit(1)             
+              .single();
 
-          if (userError || userRole.length === 0) {
+          if (userError)
+          {
               setError("User role not found or error fetching role.");
               setLoading(false);
-          } else if (userRole[0].role == "master") {
+          } else if (userRole.role == "master") {
               router.push('/portals');
               router.refresh();
           }
