@@ -19,18 +19,33 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      // Redirect to dashboard on success
-      router.push("/dashboard");
-      router.refresh();
+      if (authError) {
+          setError(authError.message);
+          setLoading(false);
+      } else {
+        //check if user is master or admin
+          const { data: userRole, error: userError } = await supabase
+              .from("restaurant_members")
+              .select("role")
+              .eq('user_id', authData.user.id);
+
+          if (userError || userRole.length === 0) {
+              setError("User role not found or error fetching role.");
+              setLoading(false);
+          } else if (userRole[0].role == "master") {
+              router.push('/portals');
+              router.refresh();
+          }
+          else {
+              // Redirect to dashboard on success
+              router.push("/dashboard");
+              router.refresh();
+          } 
     }
   };
 
@@ -47,7 +62,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none text-white"
               placeholder="chef@restaurant.com"
               required
             />
@@ -59,7 +74,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none text-white"
               placeholder="••••••••"
               required
             />
