@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { router } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { LayoutDashboard, Users, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export default function PortalSelect() {
 
+    const router = useRouter();
     const handleSignOut = async () => {
         const supabase = createClient();
+       
 
         const { error } = await supabase.auth.signOut();
 
