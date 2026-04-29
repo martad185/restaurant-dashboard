@@ -8,8 +8,8 @@ interface RawRestaurantData {
     id: string;
     name: string;
     slug: string;
-    sales: {
-        total_amount: number;
+    sales_items: {
+        gross: number;
     }[];
 }
 
@@ -33,12 +33,15 @@ export default async function SalesPortalPage() {
     // Cast the raw data to our interface safely
     const rawData = (data as unknown) as RawRestaurantData[];
 
-    const restaurantSales = rawData.map((res) => ({
-        id: res.id,
-        name: res.name,
-        slug: res.slug,
-        todayTotal: res.sales.reduce((sum, o) => sum + o.total_amount, 0)
-    })).sort((a, b) => a.name.localeCompare(b.name));
+    const restaurantSales = rawData.map((res) => {
+        const total = res.sales_items && res.sales_items.length > 0 ? res.sales_items.reduce((sum, item) => sum + (item.gross || 0), 0) : 0;
+        return {
+            id: res.id,
+            name: res.name,
+            slug: res.slug,
+            todayTotal: total
+        };
+    }).sort((a, b) => a.name.localeCompare(b.name));
 
     return <SalesListClient initialData={restaurantSales} dayName={dayName} />;
 }
