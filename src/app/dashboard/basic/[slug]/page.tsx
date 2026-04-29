@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { ArrowLeft, Calendar } from 'lucide-react';
