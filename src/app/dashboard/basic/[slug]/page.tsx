@@ -19,8 +19,7 @@ export default async function SelectDayPage({
         .from('restaurants')
         .select('id, name')
         .eq('slug', slug)
-        .limit(1)
-        .single();
+        .maybeSingle();
 
     if (!restaurant || restaurantError) {
         //notFound();
