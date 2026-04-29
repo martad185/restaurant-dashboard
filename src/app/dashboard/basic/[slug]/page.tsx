@@ -9,12 +9,13 @@ export default async function SelectDayPage({ params }: { params: { slug: string
 
     // 1. Fetch the restaurant first. 
     // If this fails, the SLUG is wrong, so we 404.
-    const { data: restaurant } = await supabase
+    const { data: restaurant, error: restaurantError } = await supabase
         .from('restaurants')
         .select('id, name')
-        .eq('slug', params.slug.trim().toLowerCase());
+        .eq('slug', params.slug.trim().toLowerCase())
+        .maybeSingle();
 
-    if (!restaurant) notFound();
+    if (!restaurant || restaurantError) { notFound(); }
 
     // 2. Generate the last 8 days (UI Shell)
     // We do this BEFORE fetching sales so we always have the dates ready.
