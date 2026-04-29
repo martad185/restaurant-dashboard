@@ -12,8 +12,7 @@ export default async function SelectDayPage({ params }: { params: { slug: string
     const { data: restaurant } = await supabase
         .from('restaurants')
         .select('id, name')
-        .eq('slug', params.slug)
-        .maybeSingle();
+        .eq('slug', params.slug.trim().toLowerCase());
 
     if (!restaurant) notFound();
 
