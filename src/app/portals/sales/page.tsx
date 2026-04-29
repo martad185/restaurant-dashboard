@@ -24,10 +24,9 @@ export default async function SalesPortalPage() {
 
     const { data, error } = await supabase
         .from('restaurants')
-        .select('id, name, slug, orders(total_amount)')
-        .filter('orders.created_at', 'gte', todayStart)
-        .filter('orders.created_at', 'lte', todayEnd)
-        .is('orders.parent_id', null);
+        .select('id, name, slug, sales_items(gross)')
+        .filter('sales_items.time_ord', 'gte', todayStart)
+        .filter('sales_items.time_ord', 'lte', todayEnd);
 
     if (error) return <div className="p-4 text-red-500">Error: {error.message}</div>;
 
