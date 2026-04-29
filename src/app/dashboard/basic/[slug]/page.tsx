@@ -4,7 +4,13 @@ import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
-export default async function SelectDayPage({ params }: { params: { slug: string } }) {
+export default async function SelectDayPage({
+    params
+}: {
+    params: Promise<{ slug: string }>
+    }) {
+
+    const { slug } = await params;
     const supabase = await createClient();
 
     // 1. Fetch the restaurant first. 
@@ -12,11 +18,14 @@ export default async function SelectDayPage({ params }: { params: { slug: string
     const { data: restaurant, error: restaurantError } = await supabase
         .from('restaurants')
         .select('id, name')
-        .eq('slug', params.slug)
+        .eq('slug', slug)
         .limit(1)
         .single();
 
-    if (!restaurant || restaurantError) { notFound(); }
+    if (!restaurant || restaurantError) {
+        //notFound();
+        return <div>Restaurant &quot;{slug}&quot; not found in database.</div>;
+    }
 
     // 2. Generate the last 8 days (UI Shell)
     // We do this BEFORE fetching sales so we always have the dates ready.
