@@ -74,7 +74,7 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
                     filteredData.map((res) => (
                         <Link
                             key={res.id}
-                            href={`/dashboard/${res.slug}`}
+                            href={`/dashboard/basic/${res.slug}`}
                             className="flex justify-between items-center px-5 py-4 border-b border-gray-100 hover:bg-blue-50/30 transition-all group"
                         >
                             <div className="flex items-center gap-4">
