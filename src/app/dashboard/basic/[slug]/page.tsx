@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/client';
 import { notFound } from 'next/navigation';
 import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { ArrowLeft, Calendar } from 'lucide-react';
@@ -12,13 +12,17 @@ export default async function SelectDayPage({ params }: { params: { slug: string
     const { data: restaurant, error: restaurantError } = await supabase
         .from('restaurants')
         .select('id, name')
-        .eq('slug', params.slug.trim().toLowerCase())
-        .maybeSingle();
+        .eq('slug', params.slug)
+        .limit(1)
+        .single();
 
     if (!restaurant || restaurantError) { notFound(); }
 
     // 2. Generate the last 8 days (UI Shell)
     // We do this BEFORE fetching sales so we always have the dates ready.
+
+    const restaurantId = (restaurant as { id: string }).id;
+
     const days = Array.from({ length: 8 }).map((_, i) => {
         const date = subDays(new Date(), i);
         return {
@@ -31,10 +35,10 @@ export default async function SelectDayPage({ params }: { params: { slug: string
     // 3. Fetch sales. Use maybeSingle or wrap in try/catch to ensure it doesn't crash.
     const dailyData = await Promise.all(
         days.map(async (day) => {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('sales_items')
                 .select('gross')
-                .eq('restaurant_id', restaurant.id)
+                .eq('restaurant_id', restaurantId)
                 .gte('time_ord', day.start)
                 .lte('time_ord', day.end);
 
