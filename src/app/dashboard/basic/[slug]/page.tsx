@@ -18,7 +18,7 @@ export default async function SelectDayPage({
     const { data: restaurant, error: restaurantError } = await supabase
         .from('restaurants')
         .select('id, name')
-        .eq('slug', slug)
+        .ilike('slug', slug)
         .maybeSingle();
 
     if (!restaurant || restaurantError) {
