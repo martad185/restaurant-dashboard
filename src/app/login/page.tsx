@@ -46,8 +46,39 @@ export default function LoginPage() {
           }
           else {
               // Redirect to dashboard on success
-              router.push("/dashboard");
-              router.refresh();
+              const { data: restaurants, error: restaurantsError } = await supabase
+                  .from("restaurant_members")
+                  .select("restaurant_id")
+                  .eq('user_id', authData.user.id);
+
+              const resCount: number = restaurants?.length ?? 0;
+              let singleRestaurantId: string | null = null;
+
+              if (restaurantsError) {
+                  setError("Error fetching restaurant count." + authData.user.id);
+                  setLoading(false);
+              } else if (resCount == 1 && restaurants) {
+                  singleRestaurantId = restaurants[0].restaurant_id;
+
+                  const { data: slugData, error: slugError } = await supabase
+                      .from("restaurants")
+                      .select("slug")
+                      .eq('id', singleRestaurantId)
+                      .single();
+
+                  if (slugError) {
+                      setError("Error fetching restaurant slug." + authData.user.id);
+                      setLoading(false);
+                  } else {
+                      router.push(`/dashboard/basic/${slugData.slug}`);
+                      router.refresh();
+                  }
+
+              } else if (resCount > 1) {
+                  router.push("/portals/sales");
+                  router.refresh();
+              }
+              
           } 
     }
   };
