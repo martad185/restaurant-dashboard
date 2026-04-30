@@ -24,7 +24,8 @@ export default async function SalesPortalPage() {
 
     const { data, error } = await supabase
         .from('restaurants')
-        .select('id, name, slug, sales_items(gross)')
+        .select('id, name, slug, restaurant_members!inner(user_id),sales_items(gross)')
+        .eq('restaurant_members.user_id', user.id)
         .filter('sales_items.time_ord', 'gte', todayStart)
         .filter('sales_items.time_ord', 'lte', todayEnd);
 
