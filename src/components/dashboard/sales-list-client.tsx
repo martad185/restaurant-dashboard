@@ -114,7 +114,7 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
                 <div className="max-w-4xl mx-auto flex justify-between items-center">
                     <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Aggregate Total</span>
                     <div className="flex items-baseline gap-1">
-                        <span className="text-xs font-bold text-gray-500 mb-1">$</span>
+                        <span className="text-xs font-bold text-gray-500 mb-1">€</span>
                         <span className="text-2xl font-black text-gray-900 tracking-tight tabular-nums">
                             {grandTotal.toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
