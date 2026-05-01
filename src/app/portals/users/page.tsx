@@ -31,7 +31,7 @@ export default async function UsersPortalPage() {
                 <div className="flex items-center gap-6">
                     <Link href="/portal" className="text-gray-600 hover:text-black flex items-center gap-2">
                         <Grid3X3 size={18} />
-                        Workspace
+                        Store Management
                     </Link>
                     {/* Active Navigation Style (Blue highlight) */}
                     <Link href="/portal/users" className="text-blue-600 font-medium flex items-center gap-2">
