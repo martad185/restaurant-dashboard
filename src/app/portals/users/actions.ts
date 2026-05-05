@@ -1,17 +1,20 @@
 'use server'
 
 import { createAdminClient } from '@/lib/supabase/admin'
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from '@/lib/supabase/client'
 import { revalidatePath } from 'next/cache'
 
 export async function createUser(formData: FormData) {
 
     //1. check if the user is an admin and authorized to create users
     const supabaseClient = await createClient()
-    const { data: { user } } = await supabaseClient.auth.getUser()
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
+    if (userError) {
+        return { error: "Failed to authenticate user" }
+    }
     // Check if user has admin role in your DB before proceeding
     if (!user || user.email !== 'helpdesk@slowey.ie') {
-        throw new Error("Unauthorized")
+        return { error: "Unauthorized" }
     }
 
     const supabase = await createAdminClient()

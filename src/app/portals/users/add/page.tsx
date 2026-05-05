@@ -46,21 +46,21 @@ export default function AddUserPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-600">First Name</label>
-                                <input name="firstName" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="John" />
+                                <input name="firstName" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="first name" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-600">Last Name</label>
-                                <input name="lastName" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="Doe" />
+                                <input name="lastName" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="last name" />
                             </div>
                         </div>
 
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-600">Email Address</label>
-                            <input name="email" type="email" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="john@example.com" />
+                            <input name="email" type="email" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="firstname@example.com" />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-600">Initial Password</label>
+                            <label className="text-sm font-semibold text-gray-600">Password</label>
                             <input name="password" type="password" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="••••••••" />
                         </div>
 
