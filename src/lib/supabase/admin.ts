@@ -5,7 +5,7 @@ export const createAdminClient = () => {
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !serviceRoleKey) {
-        return { error: new Error("Missing Supabase Admin Env Variables") };
+        throw new Error("Missing Supabase Admin Env Variables");
     }
 
     return createClient(supabaseUrl, serviceRoleKey, {
