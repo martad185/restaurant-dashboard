@@ -59,7 +59,7 @@ export default async function UsersPortalPage() {
                     </div>
 
                     {/* "+ Add New User" Button (Blue accent, rounded) */}
-                    <Link href="/portal/users/add">
+                    <Link href="/portals/users/add">
                         <button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-colors shadow-sm">
                             <UserPlus size={18} /> Add New User
                         </button>
