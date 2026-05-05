@@ -23,14 +23,14 @@ export default function AddUserPage() {
             setError(result.error)
             setLoading(false)
         } else {
-            router.push('/portal/users')
+            router.push('/portals/users')
         }
     }
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] p-4 md:p-12">
             <div className="max-w-2xl mx-auto">
-                <Link href="/portal/users" className="flex items-center gap-2 text-gray-500 hover:text-black mb-8 transition-colors">
+                <Link href="/portals/users" className="flex items-center gap-2 text-gray-500 hover:text-black mb-8 transition-colors">
                     <ChevronLeft size={20} /> Back to Users
                 </Link>
 

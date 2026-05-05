@@ -39,6 +39,6 @@ export async function createUser(formData: FormData) {
   // 2. The profile is likely created by your DB trigger automatically.
   // If not, you would manually insert into the profiles table here.
 
-  revalidatePath('/portal/users')
+  revalidatePath('/portals/users')
   return { success: true }
 }
