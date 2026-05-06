@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Edit2, Trash2, UserPlus, Users, Grid3X3, LogOut, ShieldCheck } from 'lucide-react';
+import DeleteUserButton from './DeleteUserButton'
 
 export default async function UsersPortalPage() {
     const supabase = await createClient();
@@ -11,9 +12,10 @@ export default async function UsersPortalPage() {
     // 2. Fetch users, excluding the logged-in user
     const { data: users, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email')
+        .select('id, first_name, last_name, email, full_name')
         .neq('id', user?.id) // Filter out the logged-in user
-        .order('full_name', { ascending: true }); // Order by first_name
+        .order('first_name', { ascending: true })
+        .order('last_name', { ascending: true }); // Order by first_name and then last_name
 
     return (
         // Main background: very light grey/white (similar to image_1.png)
@@ -85,11 +87,17 @@ export default async function UsersPortalPage() {
                                 {users?.map((userItem, index) => (
                                     <tr key={userItem.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
                                         <td className="py-5 px-4 font-medium text-gray-400 text-center">{index + 1}</td>
-                                        <td className="py-5 px-4 font-semibold text-black">{userItem.full_name}</td>
+                                        <td className="py-5 px-4 font-semibold text-black">{userItem.first_name}</td>
+                                        <td className="py-5 px-4 font-semibold text-black">{userItem.last_name}</td>
                                         <td className="py-5 px-4 text-gray-800 font-mono text-sm">{userItem.email}</td>
                                         <td className="py-5 px-4 text-right flex justify-end gap-3">
-                                            <button className="p-2.5 rounded-lg text-blue-600 bg-[#EFF6FF] hover:bg-blue-100"><Edit2 size={16} /></button>
-                                            <button className="p-2.5 rounded-lg text-red-600 bg-red-50 hover:bg-red-100"><Trash2 size={16} /></button>
+                                            <Link href={`/portals/users/${userItem.id}/edit`}>
+                                                <button className="p-2.5 rounded-lg text-blue-600 bg-[#EFF6FF] hover:bg-blue-100"><Edit2 size={16} /></button>
+                                            </Link>
+                                            <DeleteUserButton
+                                                userId={userItem.id}
+                                                userName={`${userItem.first_name} ${userItem.last_name}`}
+                                            />
                                         </td>
                                     </tr>
                                 ))}
@@ -104,8 +112,10 @@ export default async function UsersPortalPage() {
                                 <div className="flex justify-between items-start mb-3">
                                     <span className="text-xs font-bold text-gray-400">#{index + 1}</span>
                                     <div className="flex gap-2">
-                                        <button className="p-2 rounded-lg text-blue-600 bg-[#EFF6FF]"><Edit2 size={14} /></button>
-                                        <button className="p-2 rounded-lg text-red-600 bg-red-50"><Trash2 size={14} /></button>
+                                        <Link href={`/portals/users/${userItem.id}/edit`}>
+                                            <button className="p-2 rounded-lg text-blue-600 bg-[#EFF6FF]"><Edit2 size={14} /></button>
+                                        </Link>
+                                        <DeleteUserButton userId={userItem.id} userName={`${userItem.first_name} ${userItem.last_name}`} />
                                     </div>
                                 </div>
                                 <div className="space-y-1">
