@@ -1,4 +1,9 @@
+
+
 'use server'
+
+console.log("DEBUG: URL exists?", !!process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("DEBUG: Admin Key exists?", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 import { createAdminClient } from '@/lib/supabase/admin'
 //import { createClient } from '@/lib/supabase/client'
