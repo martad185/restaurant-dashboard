@@ -31,7 +31,7 @@ export default async function UsersPortalPage() {
                 </div>
 
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
-                    <Link href="/portal" className="text-gray-600 hover:text-black flex items-center gap-2">
+                    <Link href="/portals/stores" className="text-gray-600 hover:text-black flex items-center gap-2">
                         <Grid3X3 size={18} />
                         Stores
                     </Link>
