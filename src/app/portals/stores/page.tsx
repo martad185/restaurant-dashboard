@@ -1,65 +1,106 @@
 import { createClient } from '@/lib/supabase/server'
-import { Plus, Store, Phone, MapPin, Edit3, Trash2 } from 'lucide-react'
+import { Plus, Store, Edit2, Trash2, Users, MapPin } from 'lucide-react'
 import Link from 'next/link'
+import DeleteStoreButton from './DeleteStoreButton' // We'll create this next
 
 export default async function StoresPage() {
     const supabase = await createClient()
-    const { data: stores } = await supabase
+
+    // Fetch stores and count related profiles in one go
+    const { data: stores, error } = await supabase
         .from('restaurants')
-        .select('*')
+        .select(`
+      *,
+      restaurant_members:restaurant_members(count)
+    `)
         .order('name', { ascending: true })
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] p-4 md:p-12">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-black tracking-tight">Store Management</h1>
-                    <p className="text-gray-500 mt-1">Manage physical locations and link users with a location</p>
-                </div>
-                <Link href="/portals/stores/add">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-100">
-                        <Plus size={20} /> Add New Store
-                    </button>
-                </Link>
-            </div>
-
-            {/* Grid of Store Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {stores?.map((store) => (
-                    <div key={store.id} className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-100/50 border border-transparent hover:border-blue-100 transition-all group">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="bg-[#F0F7FF] p-3 rounded-2xl text-blue-600">
-                                <Store size={24} />
-                            </div>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${store.is_active ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
-                                {store.is_active ? 'ACTIVE' : 'INACTIVE'}
-                            </span>
-                        </div>
-
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">{store.name}</h3>
-
-                        <div className="flex gap-3 pt-4 border-t border-gray-50">
-                            <Link href={`/portal/stores/${store.id}/edit`} className="flex-1">
-                                <button className="w-full py-2.5 rounded-lg bg-gray-50 text-gray-600 font-semibold text-sm hover:bg-blue-50 hover:text-blue-600 transition-colors flex justify-center items-center gap-2">
-                                    <Edit3 size={14} /> Edit
-                                </button>
-                            </Link>
-                            <button className="p-2.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
-                                <Trash2 size={18} />
-                            </button>
-                        </div>
+            <div className="max-w-6xl mx-auto">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                    <div>
+                        <h1 className="text-3xl font-extrabold text-black tracking-tight">Stores</h1>
+                        <p className="text-gray-500 mt-1">Manage locations and users linked with locations</p>
                     </div>
-                ))}
-            </div>
-
-            {/* Empty State */}
-            {(!stores || stores.length === 0) && (
-                <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
-                    <Store size={48} className="mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-500">No stores found. Start by adding your first location.</p>
+                    <Link href="/portals/stores/add">
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-100">
+                            <Plus size={20} /> Add Store
+                        </button>
+                    </Link>
                 </div>
-            )}
+
+                {/* Desktop Table View */}
+                <div className="hidden md:block bg-white rounded-3xl shadow-xl shadow-gray-100/50 overflow-hidden border border-gray-100">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="bg-gray-50/50 border-b border-gray-100">
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider">Store Name</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider text-center">Number of Users</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-50">
+                            {stores?.map((store) => (
+                                <tr key={store.id} className="hover:bg-blue-50/30 transition-colors group">
+                                    <td className="px-8 py-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600">
+                                                <Store size={20} />
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-gray-900">{store.name}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-8 py-6">
+                                        <div className="flex items-center justify-center gap-2 text-gray-700 font-medium">
+                                            <Users size={16} className="text-gray-400" />
+                                            {store.restaurant_members[0]?.count || 0}
+                                        </div>
+                                    </td>
+                                    <td className="px-8 py-6 text-right">
+                                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Link href={`/portals/stores/${store.id}/edit`}>
+                                                <button className="p-2.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors">
+                                                    <Edit2 size={16} />
+                                                </button>
+                                            </Link>
+                                            <DeleteStoreButton storeId={store.id} storeName={store.name} />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Mobile List View */}
+                <div className="md:hidden space-y-4">
+                    {stores?.map((store) => (
+                        <div key={store.id} className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+                                        <Store size={18} />
+                                    </div>
+                                    <p className="font-bold text-gray-900">{store.name}</p>
+                                </div>
+                                <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full text-xs font-bold text-gray-600">
+                                    <Users size={12} /> {store.restaurant_members[0]?.count || 0}
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Link href={`/portals/stores/${store.id}/edit`} className="flex-1">
+                                    <button className="w-full py-2.5 rounded-xl bg-gray-50 text-gray-600 font-bold text-sm">Edit</button>
+                                </Link>
+                                <DeleteStoreButton storeId={store.id} storeName={store.name} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     )
 }
