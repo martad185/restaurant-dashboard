@@ -24,7 +24,7 @@ export default function AddStorePage() {
     const supabase = createClient()
 
     const [loading, setLoading] = useState(false)
-    //const [error, setError] = useState<string | null>(null)
+    const [error, setError] = useState<string | null>(null)
 
     const [availableUsers, setAvailableUsers] = useState<UserList>([])
     const [linkedUsers, setLinkedUsers] = useState<UserList>([])
