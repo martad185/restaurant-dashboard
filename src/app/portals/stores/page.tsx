@@ -38,6 +38,7 @@ export default async function StoresPage() {
                             <tr className="bg-gray-50/50 border-b border-gray-100">
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider">Store Name</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider text-center">Number of Users</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider">Plan</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
@@ -60,8 +61,15 @@ export default async function StoresPage() {
                                             {store.restaurant_members[0]?.count || 0}
                                         </div>
                                     </td>
+                                    <td className="px-8 py-6">
+                                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${store.plan === 'premium' ? 'bg-blue-50 text-blue-600' :
+                                                    'bg-gray-100 text-gray-600'
+                                            }`}>
+                                            {store.plan}
+                                        </span>
+                                    </td>
                                     <td className="px-8 py-6 text-right">
-                                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex justify-end gap-2">
                                             <Link href={`/portals/stores/${store.id}/edit`}>
                                                 <button className="p-2.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors">
                                                     <Edit2 size={16} />
@@ -89,6 +97,9 @@ export default async function StoresPage() {
                                 </div>
                                 <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-full text-xs font-bold text-gray-600">
                                     <Users size={12} /> {store.restaurant_members[0]?.count || 0}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Plan: {store.plan}</span>
                                 </div>
                             </div>
                             <div className="flex gap-2">
