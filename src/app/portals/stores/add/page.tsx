@@ -33,14 +33,14 @@ export default function AddStorePage() {
         async function getUnassignedUsers() {
             const { data } = await supabase
                 .from('profiles')
-                .select('id, first_name, last_name, email, restaurant_members(store_id)')
+                .select('id, first_name, last_name, email')
 
             if (data) {
                 // If restaurant_members is an empty array, they aren't linked to any store.
-                const unassigned = data.filter(
+                /*const unassigned = data.filter(
                     (profile: Profile) => !profile.restaurant_members || profile.restaurant_members.length === 0
-                )
-                setAvailableUsers(unassigned)
+                )*/
+                setAvailableUsers(data)
             }
         }
         getUnassignedUsers()
