@@ -13,7 +13,7 @@ interface Profile {
     last_name: string | null;
     email: string;
     // This matches the joined data from our junction table check
-    restaurant_members?: { store_id: string }[];
+    //restaurant_members?: { store_id: string }[];
 }
 
 // Defining the props/state structure
@@ -25,6 +25,9 @@ export default function AddStorePage() {
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    const [storeName, setStoreName] = useState('');
+    const [slug, setSlug] = useState('');
 
     const [availableUsers, setAvailableUsers] = useState<UserList>([])
     const [linkedUsers, setLinkedUsers] = useState<UserList>([])
@@ -76,6 +79,13 @@ export default function AddStorePage() {
         setLinkedUsers(linkedUsers.filter(u => u.id !== user.id))
     }
 
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newName = e.target.value;
+        setStoreName(newName);
+        // Automatically update slug based on name
+        setSlug(generateSlug(newName));
+    };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
@@ -104,7 +114,29 @@ export default function AddStorePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-600">Store Name</label>
-                            <input name="name" required className="w-full p-3 rounded-xl border border-gray-200 outline-none focus:border-blue-500" placeholder="Main Street Hub" />
+                            <input
+                                name="name"
+                                value={storeName}
+                                onChange={handleNameChange}
+                                required
+                                className="w-full p-3 rounded-xl border border-gray-200 outline-none focus:border-blue-500"
+                                placeholder="Restaurant Name" />
+                        </div>
+                        {/* Slug Input (Read-only or Editable) */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-600 flex justify-between">
+                                <span>Store URL Slug</span>
+                                <span className="text-xs font-normal text-gray-400 italic">Auto-generated</span>
+                            </label>
+                            <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-3.5 rounded-xl">
+                                <span className="text-gray-400 text-sm">yoursite.com/store/</span>
+                                <input
+                                    name="slug"
+                                    value={slug}
+                                    onChange={(e) => setSlug(generateSlug(e.target.value))} // Allows manual tweaks
+                                    className="bg-transparent outline-none text-sm font-medium text-blue-600 w-full"
+                                />
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-600">Plan</label>
