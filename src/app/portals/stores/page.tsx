@@ -16,7 +16,7 @@ export default async function StoresPage() {
         .order('name', { ascending: true })
 
     return (
-        <div className="min-h-screen bg-[#F8F9FA] p-4 md:p-12">
+        <div className="min-h-screen bg-[#F8F9FA] text-black">
             {/* 1. Header Navigation Bar (Cleaner look to match theme) */}
             <nav className="bg-white border-b border-gray-100 px-10 py-5 flex justify-between items-center shadow-sm">
                 <div className="flex items-center gap-3">
