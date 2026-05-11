@@ -75,18 +75,16 @@ export default async function UsersPortalPage() {
                     <div className="hidden md:block">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="border-b border-gray-100">
-                                    <th className="py-5 px-4 font-semibold text-gray-500 w-20 text-center">#</th>
-                                    <th className="py-5 px-4 font-semibold text-gray-500">First Name</th>
-                                    <th className="py-5 px-4 font-semibold text-gray-500">Last Name</th>
-                                    <th className="py-5 px-4 font-semibold text-gray-500">Email Address</th>
-                                    <th className="py-5 px-4 font-semibold text-gray-500 text-right">Actions</th>
+                                <tr className="bg-gray-50/50 border-b border-gray-100">
+                                    <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">First Name</th>
+                                    <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Last Name</th>
+                                    <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Email Address</th>
+                                    <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {users?.map((userItem, index) => (
+                                {users?.map((userItem) => (
                                     <tr key={userItem.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
-                                        <td className="py-5 px-4 font-medium text-gray-400 text-center">{index + 1}</td>
                                         <td className="py-5 px-4 font-semibold text-black">{userItem.first_name}</td>
                                         <td className="py-5 px-4 font-semibold text-black">{userItem.last_name}</td>
                                         <td className="py-5 px-4 text-gray-800 font-mono text-sm">{userItem.email}</td>
@@ -110,7 +108,6 @@ export default async function UsersPortalPage() {
                         {users?.map((userItem, index) => (
                             <div key={userItem.id} className="p-4 border border-gray-100 rounded-2xl bg-[#FDFDFD]">
                                 <div className="flex justify-between items-start mb-3">
-                                    <span className="text-xs font-bold text-gray-400">#{index + 1}</span>
                                     <div className="flex gap-2">
                                         <Link href={`/portals/users/${userItem.id}/edit`}>
                                             <button className="p-2 rounded-lg text-blue-600 bg-[#EFF6FF]"><Edit2 size={14} /></button>

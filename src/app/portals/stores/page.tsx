@@ -42,8 +42,30 @@ export default async function StoresPage() {
                     </button>
                 </div>
             </nav>
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
+
+
+            <main className="p-4 md:p-12 max-w-[1600px] mx-auto">
+                <div className="flex justify-between items-center mb-10">
+                    <div className="flex items-center gap-4">
+                        <div className="bg-[#EFF6FF] p-3 rounded-2xl text-blue-600">
+                            <Grid3X3 size={32} />
+                        </div>
+                        <div>
+                            <h2 className="text-3xl font-bold">Stores Management</h2>
+                            <p className="text-gray-500 mt-1">Add new stores, manage locations, and users linked with locations.</p>
+                        </div>
+                    </div>
+
+                    {/* "+ Add New Store" Button (Blue accent, rounded) */}
+                    <Link href="/portals/stores/add">
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-colors shadow-sm">
+                            <Plus size={18} /> Add New Store
+                        </button>
+                    </Link>
+                </div>
+
+                {/* <div className="max-w-6xl mx-auto">
+                
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
                     <div>
                         <h1 className="text-3xl font-extrabold text-black tracking-tight">Stores</h1>
@@ -55,16 +77,20 @@ export default async function StoresPage() {
                         </button>
                     </Link>
                 </div>
+            */}
 
+
+                <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-100/50">
                 {/* Desktop Table View */}
-                <div className="hidden md:block bg-white rounded-3xl shadow-xl shadow-gray-100/50 overflow-hidden border border-gray-100">
+                <div className="hidden md:block">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-gray-50/50 border-b border-gray-100">
-                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider">Store Name</th>
-                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider text-center">Number of Users</th>
-                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider">Plan</th>
-                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                <tr className="bg-gray-50/50 border-b border-gray-100">
+
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Store Name</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Number of Users</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Plan</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -112,7 +138,7 @@ export default async function StoresPage() {
                 {/* Mobile List View */}
                 <div className="md:hidden space-y-4">
                     {stores?.map((store) => (
-                        <div key={store.id} className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+                        <div key={store.id} className="p-5 rounded-3xl shadow-sm border border-gray-100">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex items-center gap-3">
                                     <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
@@ -135,8 +161,12 @@ export default async function StoresPage() {
                             </div>
                         </div>
                     ))}
+                    </div>
                 </div>
-            </div>
+            </main>
+            <footer className="text-center text-sm text-gray-400 py-10">
+                You are managing the Master Control workspace.
+            </footer>
         </div>
     )
 }
