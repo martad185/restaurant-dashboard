@@ -53,3 +53,40 @@ export async function createStoreWithUsers(formData: FormData, selectedUserIds: 
     revalidatePath('/portal/users')
     return { success: true }
 }
+
+export async function updateStore(
+    storeId: string,
+    formData: FormData,
+    newUserIds: string[]
+) {
+    const supabase = await createClient()
+
+    const name = formData.get('name') as string
+    const plan = formData.get('plan') as string
+    const slug = formData.get('slug') as string
+
+    // 1. Update Store Details
+    const { error: storeError } = await supabase
+        .from('stores')
+        .update({ name, plan, slug })
+        .eq('id', storeId)
+
+    if (storeError) return { error: storeError.message }
+
+    // 2. Sync Members (The "Wipe and Replace" strategy is simplest)
+    // First, remove all existing members for this store
+    await supabase.from('restaurant_members').delete().eq('store_id', storeId)
+
+    // Then, insert the new selection
+    if (newUserIds.length > 0) {
+        const memberRows = newUserIds.map(id => ({
+            store_id: storeId,
+            user_id: id
+        }))
+        const { error: memberError } = await supabase.from('restaurant_members').insert(memberRows)
+        if (memberError) return { error: memberError.message }
+    }
+
+    revalidatePath('/portals/stores')
+    return { success: true }
+}
