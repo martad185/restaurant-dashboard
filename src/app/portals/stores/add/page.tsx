@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { UserPlus, Store, Loader2, Check, X, Search, ChevronDown } from 'lucide-react'
+import { UserPlus, Store, Loader2, Check, X, Search, ChevronDown, LinkIcon } from 'lucide-react'
 import { createStoreWithUsers } from '../actions'
 import { createClient } from '@/lib/supabase/client'
 
@@ -18,6 +18,9 @@ interface Profile {
 
 // Defining the props/state structure
 type UserList = Profile[];
+
+
+
 
 export default function AddStorePage() {
     const router = useRouter()
@@ -38,6 +41,22 @@ export default function AddStorePage() {
     const filteredUsers = availableUsers.filter(user =>
         `${user.first_name} ${user.last_name} ${user.email}`.toLowerCase().includes(searchTerm.toLowerCase())
     )
+
+    const generateSlug = (text: string) => {
+        return text
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '') // Remove non-word characters (emojis, punctuation)
+            .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+            .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    }
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newName = e.target.value;
+        setStoreName(newName);
+        // Automatically update slug based on name
+        setSlug(generateSlug(newName));
+    }
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -79,12 +98,7 @@ export default function AddStorePage() {
         setLinkedUsers(linkedUsers.filter(u => u.id !== user.id))
     }
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newName = e.target.value;
-        setStoreName(newName);
-        // Automatically update slug based on name
-        setSlug(generateSlug(newName));
-    };
+    
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -125,16 +139,15 @@ export default function AddStorePage() {
                         {/* Slug Input (Read-only or Editable) */}
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-600 flex justify-between">
-                                <span>Store URL Slug</span>
-                                <span className="text-xs font-normal text-gray-400 italic">Auto-generated</span>
+                                Store URL Slug <span className="text-[10px] text-gray-400 uppercase tracking-widest">Auto-Generated</span>
                             </label>
-                            <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-3.5 rounded-xl">
-                                <span className="text-gray-400 text-sm">{slug}</span>
+                            <div className="flex items-center gap-2 bg-gray-100/50 p-4 rounded-2xl border border-dashed border-gray-200">
+                                <LinkIcon size={14} className="text-gray-400" />
                                 <input
                                     name="slug"
                                     value={slug}
-                                    onChange={(e) => setSlug(generateSlug(e.target.value))} // Allows manual tweaks
-                                    className="bg-transparent outline-none text-sm font-medium text-blue-600 w-full"
+                                    onChange={(e) => setSlug(generateSlug(e.target.value))}
+                                    className="bg-transparent outline-none text-sm font-mono text-blue-700 w-full"
                                 />
                             </div>
                         </div>
