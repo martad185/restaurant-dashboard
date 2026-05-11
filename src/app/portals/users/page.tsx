@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Edit2, Trash2, UserPlus, Users, Grid3X3, LogOut, ShieldCheck } from 'lucide-react';
+import { Edit2, UserPlus, Users, Grid3X3, LogOut, ShieldCheck } from 'lucide-react';
 import DeleteUserButton from './DeleteUserButton'
 
 export default async function UsersPortalPage() {
@@ -85,10 +85,10 @@ export default async function UsersPortalPage() {
                             <tbody>
                                 {users?.map((userItem) => (
                                     <tr key={userItem.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
-                                        <td className="py-5 px-4 font-semibold text-black">{userItem.first_name}</td>
-                                        <td className="py-5 px-4 font-semibold text-black">{userItem.last_name}</td>
-                                        <td className="py-5 px-4 text-gray-800 font-mono text-sm">{userItem.email}</td>
-                                        <td className="py-5 px-4 text-right flex justify-end gap-3">
+                                        <td className="py-5 px-8 font-semibold text-black">{userItem.first_name}</td>
+                                        <td className="py-5 px-8 font-semibold text-black">{userItem.last_name}</td>
+                                        <td className="py-5 px-8 text-gray-800 font-mono text-sm">{userItem.email}</td>
+                                        <td className="py-5 px-8 text-right flex justify-end gap-3">
                                             <Link href={`/portals/users/${userItem.id}/edit`}>
                                                 <button className="p-2.5 rounded-lg text-blue-600 bg-[#EFF6FF] hover:bg-blue-100"><Edit2 size={16} /></button>
                                             </Link>

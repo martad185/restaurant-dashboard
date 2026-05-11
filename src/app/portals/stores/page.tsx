@@ -88,7 +88,7 @@ export default async function StoresPage() {
                                 <tr className="bg-gray-50/50 border-b border-gray-100">
 
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Store Name</th>
-                                <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Number of Users</th>
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider text-center">Number of Users</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Plan</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                             </tr>
