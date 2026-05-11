@@ -129,7 +129,7 @@ export default function AddStorePage() {
                                 <span className="text-xs font-normal text-gray-400 italic">Auto-generated</span>
                             </label>
                             <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-3.5 rounded-xl">
-                                <span className="text-gray-400 text-sm">yoursite.com/store/</span>
+                                <span className="text-gray-400 text-sm">{slug}</span>
                                 <input
                                     name="slug"
                                     value={slug}
