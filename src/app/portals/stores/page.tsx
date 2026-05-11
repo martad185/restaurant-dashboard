@@ -32,7 +32,7 @@ export default async function StoresPage() {
                         Stores
                     </Link>
                     {/* Active Navigation Style (Blue highlight) */}
-                    <Link href="/portal/users"  className="text-gray-600 hover:text-black flex items-center gap-2">
+                    <Link href="/portals/users"  className="text-gray-600 hover:text-black flex items-center gap-2">
                         <Users size={18} />
                         Users
                     </Link>

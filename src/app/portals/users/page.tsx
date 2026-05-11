@@ -36,7 +36,7 @@ export default async function UsersPortalPage() {
                         Stores
                     </Link>
                     {/* Active Navigation Style (Blue highlight) */}
-                    <Link href="/portal/users" className="text-blue-600 font-medium flex items-center gap-2">
+                    <Link href="/portals/users" className="text-blue-600 font-medium flex items-center gap-2">
                         <Users size={18} />
                         Users
                     </Link>
