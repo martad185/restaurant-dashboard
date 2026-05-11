@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Plus, Store, Edit2, Trash2, Users, MapPin } from 'lucide-react'
+import { Plus, Store, Edit2, Trash2, Users, MapPin, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import DeleteStoreButton from './DeleteStoreButton' // We'll create this next
 
@@ -17,6 +17,31 @@ export default async function StoresPage() {
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] p-4 md:p-12">
+            {/* 1. Header Navigation Bar (Cleaner look to match theme) */}
+            <nav className="bg-white border-b border-gray-100 px-10 py-5 flex justify-between items-center shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="bg-[#EFF6FF] p-2 rounded-xl text-blue-600">
+                        <ShieldCheck size={28} />
+                    </div>
+                    <h1 className="text-2xl font-bold">Master Control</h1>
+                </div>
+
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+                    <Link href="/portals/stores" className="text-blue-600 font-medium flex items-center gap-2">
+                        <Grid3X3 size={18} />
+                        Stores
+                    </Link>
+                    {/* Active Navigation Style (Blue highlight) */}
+                    <Link href="/portal/users"  className="text-gray-600 hover:text-black flex items-center gap-2">
+                        <Users size={18} />
+                        Users
+                    </Link>
+                    <button className="text-gray-600 hover:text-red-500 flex items-center gap-2">
+                        <LogOut size={18} />
+                        Logout
+                    </button>
+                </div>
+            </nav>
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
