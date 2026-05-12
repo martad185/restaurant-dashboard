@@ -11,7 +11,7 @@ export default async function StoresPage() {
         .from('restaurants')
         .select(`
       *,
-      restaurant_members:restaurant_members(count)
+      restaurant_members(count)
     `)
         .order('name', { ascending: true })
 
