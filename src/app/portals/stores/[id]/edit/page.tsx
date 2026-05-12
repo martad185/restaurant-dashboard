@@ -50,8 +50,7 @@ interface Profile {
                 email)
             
         `)
-
-        .not('restaurant_members.role', 'eq', 'master')
+        .not('role', 'eq', 'master')
         .eq('restaurant_id', id);
 
         // 3. Format the data to match your Profile interface
