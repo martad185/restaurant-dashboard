@@ -50,7 +50,9 @@ interface Profile {
                 email)
             
         `)
-            .eq('restaurant_id', id);
+
+        .not('restaurant_members.role', 'eq', 'master')
+        .eq('restaurant_id', id);
 
         // 3. Format the data to match your Profile interface
         // membersData looks like [{ profiles: { id: '...', ... } }]
