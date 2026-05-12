@@ -11,9 +11,12 @@ export default async function StoresPage() {
         .from('restaurants')
         .select(`
       *,
-      restaurant_members(count)
+      restaurant_members!inner(count)
     `)
+        .not('restaurant_members.role', 'eq', 'master')
         .order('name', { ascending: true })
+
+    const memberCount = stores?.length || 0
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-black">
