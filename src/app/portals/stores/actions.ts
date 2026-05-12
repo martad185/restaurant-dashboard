@@ -4,7 +4,11 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function deleteStore(storeId: string) {
-  const supabase = await createClient()
+    const supabase = await createClient()
+
+    const { error: userError } = await supabase.from('restaurant_members').delete().eq('restaurant_id', storeId) // Keep the master user intact)
+
+    if (userError) return { error: userError.message }
 
   const { error } = await supabase
     .from('restaurants')
@@ -81,7 +85,7 @@ export async function updateStore(
 
     // 1. Update Store Details
     const { error: storeError } = await supabase
-        .from('stores')
+        .from('restaurants')
         .update({ name, plan, slug })
         .eq('id', storeId)
 
@@ -89,13 +93,14 @@ export async function updateStore(
 
     // 2. Sync Members (The "Wipe and Replace" strategy is simplest)
     // First, remove all existing members for this store
-    await supabase.from('restaurant_members').delete().eq('store_id', storeId)
+    await supabase.from('restaurant_members').delete().eq('restaurant_id', storeId).not('role', 'eq', 'master') // Keep the master user intact)
 
     // Then, insert the new selection
     if (newUserIds.length > 0) {
         const memberRows = newUserIds.map(id => ({
-            store_id: storeId,
-            user_id: id
+            restaurant_id: storeId,
+            user_id: id,
+            role: "admin"
         }))
         const { error: memberError } = await supabase.from('restaurant_members').insert(memberRows)
         if (memberError) return { error: memberError.message }
