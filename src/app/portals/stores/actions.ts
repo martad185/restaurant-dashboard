@@ -6,9 +6,9 @@ import { revalidatePath } from 'next/cache'
 export async function deleteStore(storeId: string) {
     const supabase = await createClient()
 
-    const { error: userError } = await supabase.from('restaurant_members').delete().eq('restaurant_id', storeId) // Keep the master user intact)
+   // const { error: userError } = await supabase.from('restaurant_members').delete().eq('restaurant_id', storeId) // Keep the master user intact)
 
-    if (userError) return { error: userError.message }
+   // if (userError) return { error: userError.message }
 
   const { error } = await supabase
     .from('restaurants')
