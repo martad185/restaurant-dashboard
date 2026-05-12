@@ -37,9 +37,23 @@ export async function createStoreWithUsers(formData: FormData, selectedUserIds: 
 
     // 2. Link selected users to this new store
     if (selectedUserIds.length > 0) {
+
+        // 1. Get the current authenticated user
+        const { data: authData } = await supabase.auth.getUser();
+        const currentUserId = authData.user?.id;
+
+        const masterRows = [{ restaurant_id: newStoreId, user_id: currentUserId, role: "master" }]
+
+        const { error: masterError } = await supabase
+            .from('restaurant_members')
+            .insert(masterRows)
+
+        if (masterError) return { error: `Store created, but failed to link master user: ${masterError.message}` }
+          
         const memberRows = selectedUserIds.map((userId) => ({
             restaurant_id: newStoreId,
             user_id: userId,
+            role: "admin",
         }))
 
         const { error: membersError } = await supabase

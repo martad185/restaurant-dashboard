@@ -73,20 +73,27 @@ export default function AddStorePage() {
 
     useEffect(() => {
         async function getUnassignedUsers() {
-            const { data } = await supabase
+            // 1. Get the current authenticated user
+            const { data: authData } = await supabase.auth.getUser();
+            const currentUserId = authData.user?.id;
+
+            // 2. Fetch profiles
+            const { data, error } = await supabase
                 .from('profiles')
                 .select('id, first_name, last_name, email')
 
             if (data) {
-                // If restaurant_members is an empty array, they aren't linked to any store.
-                /*const unassigned = data.filter(
-                    (profile: Profile) => !profile.restaurant_members || profile.restaurant_members.length === 0
-                )*/
-                setAvailableUsers(data)
+                const profiles = data as Profile[];
+                const unassigned = profiles.filter((p) => {
+                    // Condition B: Must NOT be the current logged-in user
+                    const isNotMe = p.id !== currentUserId;
+                    return isNotMe;
+                });
+                setAvailableUsers(unassigned)
             }
         }
         getUnassignedUsers()
-    }, [])
+    }, [supabase])
 
     const linkUser = (user: Profile) => {
         setLinkedUsers([...linkedUsers, user])
