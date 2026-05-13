@@ -1,28 +1,11 @@
-/* eslint-disable @next/next/no-async-client-component */
-'use client'
+
 
 import { createClient } from '@/lib/supabase/client'
 import { Plus, Store, Edit2, Users, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import DeleteStoreButton from './DeleteStoreButton' // We'll create this next
+import DeleteStoreButton from './DeleteStoreButton'
+import LogoutButton from '@/components/LogoutButton'
 
-
-const handleSignOut = async () => {
-    const supabase = createClient();
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const router = useRouter();
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-        console.error('Error signing out:', error.message);
-    } else {
-        // Clear the router cache and redirect to login
-        router.refresh();
-        router.push('/login');
-    }
-};
 
 export default async function StoresPage() {
     const supabase = await createClient()
@@ -60,12 +43,13 @@ export default async function StoresPage() {
                         <Users size={18} />
                         Users
                     </Link>
-                    <button
+                    <LogoutButton />
+                    {/*<button
                         onClick={handleSignOut}
                         className="text-gray-600 hover:text-red-500 flex items-center gap-2">
                         <LogOut size={18} />
                         Logout
-                    </button>
+                    </button>*/}
                 </div>
             </nav>
 
