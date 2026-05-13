@@ -9,10 +9,12 @@ export default async function GraphPage({
     searchParams
 }: {
     params: Promise<{ slug: string }>,
-    searchParams: Promise<{ start: string; end: string }>
+    //searchParams: Promise<{ start: string; end: string }>
+        searchParams: Promise<{date: string}>
 }) {
     const { slug } = await params;
-    const { start, end } = await searchParams;
+    //const { start, end } = await searchParams;
+    const { date } = await searchParams;
     const supabase = await createClient();
 
     // 1. Fetch Restaurant & Sales Data
@@ -28,8 +30,9 @@ export default async function GraphPage({
         .from('sales_items')
         .select('summary_group, gross')
         .eq('restaurant_id', restaurant.id)
-        .gte('time_ord', start)
-        .lte('time_ord', end);
+        .eq('open_date', date);
+        //.gte('time_ord', start)
+        //.lte('time_ord', end);
 
     // 2. Aggregate data by summary_group for the list and chart
     const summaryGroupTotals = sales?.reduce((acc, item) => {
@@ -59,7 +62,7 @@ export default async function GraphPage({
             {/* 2. Date Title Section */}
             <div className="py-4 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-lg">
-                    {format(new Date(start), 'EEEE, d MMMM yyyy')}
+                    {format(new Date(date), 'EEEE, d MMMM yyyy')}
                 </h2>
             </div>
 

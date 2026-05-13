@@ -54,7 +54,12 @@ export default async function SelectDayPage({
                 .eq('item_type','Sale_Item');
 
             // If error or no data, we return 0 instead of failing
-            const total = data?.reduce((sum, item) => sum + ((item.gross || 0) * (item.qty || 0)), 0) || 0;
+            //const total = data?.reduce((sum, item) => sum + ((item.gross || 0) * (item.qty || 0)), 0) || 0;
+
+            const total = data?.reduce((sum, item) => {
+                const lineTotal = (item.gross || 0) * (item.qty || 0);
+                return sum + lineTotal;
+            }, 0) || 0;
 
             return {
                 dateLabel: day.label,
