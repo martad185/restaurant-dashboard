@@ -35,8 +35,9 @@ export default async function SelectDayPage({
         const date = subDays(new Date(), i);
         return {
             label: format(date, 'EEEE'),
-            start: startOfDay(date).toISOString(),
-            end: endOfDay(date).toISOString()
+            dateString: format(date, 'yyyy-MM-dd')
+            //start: startOfDay(date).toISOString(),
+            //end: endOfDay(date).toISOString()
         };
     });
 
@@ -47,8 +48,9 @@ export default async function SelectDayPage({
                 .from('sales_items')
                 .select('gross, qty')
                 .eq('restaurant_id', restaurantId)
-                .gte('time_ord', day.start)
-                .lte('time_ord', day.end)
+                .eq('open_date', day.dateString)
+                //.gte('time_ord', day.start)
+                //.lte('time_ord', day.end)
                 .eq('item_type','Sale_Item');
 
             // If error or no data, we return 0 instead of failing
@@ -57,8 +59,9 @@ export default async function SelectDayPage({
             return {
                 dateLabel: day.label,
                 total,
-                start: day.start, // Add this
-                end: day.end
+                dateString: day.dateString
+                //start: day.start, 
+                //end: day.end
             };
         })
     );
@@ -83,7 +86,8 @@ export default async function SelectDayPage({
                 {dailyData.map((day, index) => (
                     <Link
                         key={index}
-                        href={`/dashboard/basic/${slug}/graphs?start=${encodeURIComponent(day.start)}&end=${encodeURIComponent(day.end)}`}
+                        href={`/dashboard/basic/${slug}/graphs?date=${day.dateString}`}
+                        //href={`/dashboard/basic/${slug}/graphs?start=${encodeURIComponent(day.start)}&end=${encodeURIComponent(day.end)}`}
                         //className="flex justify-between items-center px-5 py-4 border-b border-gray-100 hover:bg-blue-50/30 transition-all group"
                     >
                     <div
