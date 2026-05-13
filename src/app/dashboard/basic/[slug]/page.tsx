@@ -22,8 +22,8 @@ export default async function SelectDayPage({
         .maybeSingle();
 
     if (!restaurant || restaurantError) {
-        //notFound();
-        return <div>Restaurant &quot;{slug}&quot; not found in database.</div>;
+        notFound();
+        //return <div>Restaurant &quot;{slug}&quot; not found in database.</div>;
     }
 
     // 2. Generate the last 8 days (UI Shell)
@@ -55,7 +55,9 @@ export default async function SelectDayPage({
 
             return {
                 dateLabel: day.label,
-                total
+                total,
+                start: day.start, // Add this
+                end: day.end
             };
         })
     );
@@ -78,8 +80,13 @@ export default async function SelectDayPage({
             {/* Main List Area */}
             <main className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
                 {dailyData.map((day, index) => (
-                    <div
+                    <Link
                         key={index}
+                        href={`/dashboard/basic/${slug}/graphs?start=${encodeURIComponent(day.start)}&end=${encodeURIComponent(day.end)}`}
+                        className="flex justify-between items-center px-5 py-4 border-b border-gray-100 hover:bg-blue-50/30 transition-all group"
+                    >
+                    <div
+                       // key={index}
                         className="flex justify-between items-center px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer group"
                     >
                         <span className="text-[15px] text-gray-900 font-normal">
@@ -88,7 +95,8 @@ export default async function SelectDayPage({
                         <span className="text-[15px] text-gray-900 font-medium tabular-nums">
                             {day.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
-                    </div>
+                        </div>
+                    </Link>
                 ))}
             </main>
 
