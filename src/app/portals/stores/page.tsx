@@ -1,3 +1,6 @@
+/* eslint-disable @next/next/no-async-client-component */
+'use client'
+
 import { createClient } from '@/lib/supabase/client'
 import { Plus, Store, Edit2, Users, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
 import Link from 'next/link'

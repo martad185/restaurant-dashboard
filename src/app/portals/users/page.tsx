@@ -1,3 +1,6 @@
+/* eslint-disable @next/next/no-async-client-component */
+'use client';
+
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -38,7 +41,7 @@ export default async function UsersPortalPage() {
         .order('first_name', { ascending: true })
         .order('last_name', { ascending: true }); // Order by first_name and then last_name
 
-
+    if (error) { return error.message; }
     
 
     return (
@@ -131,7 +134,7 @@ export default async function UsersPortalPage() {
 
                     {/* MOBILE LIST: Visible only on small screens (block md:hidden) */}
                     <div className="block md:hidden space-y-4">
-                        {users?.map((userItem, index) => (
+                        {users?.map((userItem) => (
                             <div key={userItem.id} className="p-4 border border-gray-100 rounded-2xl bg-[#FDFDFD]">
                                 <div className="flex justify-between items-start mb-3">
                                     <div className="flex gap-2">
