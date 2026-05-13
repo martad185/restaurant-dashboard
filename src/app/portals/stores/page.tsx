@@ -1,7 +1,25 @@
-import { createClient } from '@/lib/supabase/server'
-import { Plus, Store, Edit2, Trash2, Users, MapPin, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { Plus, Store, Edit2, Users, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import DeleteStoreButton from './DeleteStoreButton' // We'll create this next
+
+
+const handleSignOut = async () => {
+    const supabase = createClient();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const router = useRouter();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error('Error signing out:', error.message);
+    } else {
+        // Clear the router cache and redirect to login
+        router.refresh();
+        router.push('/login');
+    }
+};
 
 export default async function StoresPage() {
     const supabase = await createClient()
@@ -16,7 +34,7 @@ export default async function StoresPage() {
         .not('restaurant_members.role', 'eq', 'master')
         .order('name', { ascending: true })
 
-    const memberCount = stores?.length || 0
+    if (error) return { error: error.message }
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-black">
@@ -39,7 +57,9 @@ export default async function StoresPage() {
                         <Users size={18} />
                         Users
                     </Link>
-                    <button className="text-gray-600 hover:text-red-500 flex items-center gap-2">
+                    <button
+                        onClick={handleSignOut}
+                        className="text-gray-600 hover:text-red-500 flex items-center gap-2">
                         <LogOut size={18} />
                         Logout
                     </button>

@@ -1,13 +1,34 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Edit2, UserPlus, Users, Grid3X3, LogOut, ShieldCheck } from 'lucide-react';
 import DeleteUserButton from './DeleteUserButton'
 
+
+const handleSignOut = async () => {
+    const supabase = createClient();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const router = useRouter();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error('Error signing out:', error.message);
+    } else {
+        // Clear the router cache and redirect to login
+        router.refresh();
+        router.push('/login');
+    }
+};
+
 export default async function UsersPortalPage() {
     const supabase = await createClient();
+    
 
     // 1. Get current user's ID
     const { data: { user } } = await supabase.auth.getUser();
+
+
 
     // 2. Fetch users, excluding the logged-in user
     const { data: users, error } = await supabase
@@ -16,6 +37,9 @@ export default async function UsersPortalPage() {
         .neq('id', user?.id) // Filter out the logged-in user
         .order('first_name', { ascending: true })
         .order('last_name', { ascending: true }); // Order by first_name and then last_name
+
+
+    
 
     return (
         // Main background: very light grey/white (similar to image_1.png)
@@ -40,7 +64,9 @@ export default async function UsersPortalPage() {
                         <Users size={18} />
                         Users
                     </Link>
-                    <button className="text-gray-600 hover:text-red-500 flex items-center gap-2">
+                    <button
+                        onClick={handleSignOut}
+                        className="text-gray-600 hover:text-red-500 flex items-center gap-2">
                         <LogOut size={18} />
                         Logout
                     </button>
