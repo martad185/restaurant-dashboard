@@ -112,9 +112,9 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
             {/* Persistent Grand Total Footer */}
             <footer className="bg-[#F3F3F3] border-t border-gray-300 p-5 sticky bottom-0 z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
                 <div className="max-w-4xl mx-auto flex justify-end px-8 py-6 items-center">
-                    <span className="text-s font-black text-black uppercase tracking-[0.2em]">Total:</span>
+                    <span className="text-xl font-black text-gray-900 uppercase tracking-[0.2em]">Total:</span>
                     <div className="flex items-baseline gap-1">
-                        <span className="text-xs font-bold text-gray-500 mb-1">€</span>
+                        <span className="text-xl font-bold text-gray-900 mb-1">€</span>
                         <span className="text-2xl font-black text-gray-900 tracking-tight tabular-nums">
                             {grandTotal.toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
