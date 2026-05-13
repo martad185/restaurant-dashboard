@@ -83,7 +83,7 @@ export default async function SelectDayPage({
                     <Link
                         key={index}
                         href={`/dashboard/basic/${slug}/graphs?start=${encodeURIComponent(day.start)}&end=${encodeURIComponent(day.end)}`}
-                        className="flex justify-between items-center px-5 py-4 border-b border-gray-100 hover:bg-blue-50/30 transition-all group"
+                        //className="flex justify-between items-center px-5 py-4 border-b border-gray-100 hover:bg-blue-50/30 transition-all group"
                     >
                     <div
                        // key={index}
