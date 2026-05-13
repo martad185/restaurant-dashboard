@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Edit2, UserPlus, Users, Grid3X3, ShieldCheck } from 'lucide-react';
 import DeleteUserButton from './DeleteUserButton'
@@ -22,7 +22,7 @@ export default async function UsersPortalPage() {
         .order('first_name', { ascending: true })
         .order('last_name', { ascending: true }); // Order by first_name and then last_name
 
-    if (error) return <div className="p-8 text-center text-red-500">Failed to load users: {error.message}</div>;
+    if (error) return (<div className="p-8 text-center text-red-500">Failed to load users: {error.message}</div>);
     
 
     return (

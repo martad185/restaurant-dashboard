@@ -1,6 +1,6 @@
 
 
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import { Plus, Store, Edit2, Users, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import DeleteStoreButton from './DeleteStoreButton'
@@ -20,7 +20,7 @@ export default async function StoresPage() {
         .not('restaurant_members.role', 'eq', 'master')
         .order('name', { ascending: true })
 
-    if (error) return <div className="p-8 text-center text-red-500">Failed to load companies: {error.message}</div>;
+    if (error) return (<div className="p-8 text-center text-red-500">Failed to load companies: {error.message}</div>);
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-black">
