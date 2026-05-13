@@ -45,13 +45,14 @@ export default async function SelectDayPage({
         days.map(async (day) => {
             const { data } = await supabase
                 .from('sales_items')
-                .select('gross')
+                .select('gross, qty')
                 .eq('restaurant_id', restaurantId)
                 .gte('time_ord', day.start)
-                .lte('time_ord', day.end);
+                .lte('time_ord', day.end)
+                .eq('item_type','Sale_Item');
 
             // If error or no data, we return 0 instead of failing
-            const total = data?.reduce((sum, item) => sum + (item.gross || 0), 0) || 0;
+            const total = data?.reduce((sum, item) => sum + ((item.gross || 0) * (item.qty || 0)), 0) || 0;
 
             return {
                 dateLabel: day.label,
