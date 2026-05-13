@@ -20,7 +20,7 @@ export default async function StoresPage() {
         .not('restaurant_members.role', 'eq', 'master')
         .order('name', { ascending: true })
 
-    if (error) return { error: error.message }
+    if (error) return <div className="p-8 text-center text-red-500">Failed to load companies: {error.message}</div>;
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-black">

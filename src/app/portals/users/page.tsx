@@ -22,7 +22,7 @@ export default async function UsersPortalPage() {
         .order('first_name', { ascending: true })
         .order('last_name', { ascending: true }); // Order by first_name and then last_name
 
-    if (error) { return error.message; }
+    if (error) return <div className="p-8 text-center text-red-500">Failed to load users: {error.message}</div>;
     
 
     return (
