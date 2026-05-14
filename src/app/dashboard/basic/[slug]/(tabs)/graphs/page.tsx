@@ -20,7 +20,7 @@ export default async function GraphPage({
     if (!dateString) {
         return (
             <div className="p-10 text-center text-red-600 font-bold">
-                Error: A specific date is required to view graphs.
+                Error: A specific date is required to view graphs, {dateString}
             </div>
         ); 
     }
