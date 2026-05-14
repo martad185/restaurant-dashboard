@@ -85,7 +85,7 @@ export default async function SelectDayPage({
         <div className="flex flex-col min-h-screen bg-[#E5E5E5]">
             {/* Header - Matching image_a51306.png */}
             <header className="bg-[#F3F3F3] border-b border-gray-300 p-4 sticky top-0 z-10">{/*className="bg-white border-b border-gray-300 px-4 py-3 flex items-center gap-4 sticky top-0 z-10">*/}
-                <div className="max-w-4xl mx-auto bg-white flex items-center gap-4">
+                <div className="max-w-4xl mx-auto bg-white p-4 flex items-center gap-4">
                 <Link href="/portals/sales" className="text-gray-600 hover:text-black">
                     <ArrowLeft size={20} />
                 </Link>
