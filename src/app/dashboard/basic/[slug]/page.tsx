@@ -48,7 +48,7 @@ export default async function SelectDayPage({
                 .from('sales_items')
                 .select('gross, qty')
                 .eq('restaurant_id', restaurantId)
-                .eq('open_date', day.dateString)
+                .eq('open_date', '2026-05-09')
                 //.gte('time_ord', day.start)
                 //.lte('time_ord', day.end)
                 .eq('item_type','Sale_Item');
