@@ -42,7 +42,7 @@ export default async function SelectDayPage({
     });
 
     // 3. Fetch sales. Use maybeSingle or wrap in try/catch to ensure it doesn't crash.
-    const dailyData = await Promise.all(
+    /*const dailyData = await Promise.all(
         days.map(async (day) => {
             const { data } = await supabase
                 .from('sales_items')
@@ -51,16 +51,24 @@ export default async function SelectDayPage({
                 .eq('open_date', '2026-05-09')
                 //.gte('time_ord', day.start)
                 //.lte('time_ord', day.end)
-                .eq('item_type','Sale_Item');
+                .eq('item_type','Sale_Item');*/
+
+                const dailyData = await Promise.all(
+                    days.map(async (day) => {
+                        const { data: total } = await supabase
+                                .rpc('get_daily_total', {
+                                    res_id: restaurantId,
+                                    target_date: day.dateString
+        });
 
             // If error or no data, we return 0 instead of failing
             //const total = data?.reduce((sum, item) => sum + ((item.gross || 0) * (item.qty || 0)), 0) || 0;
 
-            const total = data?.reduce((sum, item) => {
+            /*const total = data?.reduce((sum, item) => {
                 const lineTotal = (item.gross || 0) * (item.qty || 0);
                 return sum + lineTotal;
             }, 0) || 0;
-
+            */
             return {
                 dateLabel: day.label,
                 total,
