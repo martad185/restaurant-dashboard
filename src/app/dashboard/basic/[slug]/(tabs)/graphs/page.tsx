@@ -121,11 +121,11 @@ export default async function GraphPage({
             <Graph chartData={chartData} />
 
             {/* 4. Summary Group List */}
-            <div className="w-full px-4 space-y-2">
+            {/* <div className="w-full px-4 space-y-2">
                 {chartData.map((item, index) => (
                     <div key={item.name} className="flex justify-between items-center py-3 border-b border-gray-50">
                         <div className="flex items-center gap-3">
-                            {/* The color indicator matching the graph slice */}
+                            
                             <div
                                 className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px]"
                                 style={{ backgroundColor: COLORS[index % COLORS.length] }}
@@ -135,13 +135,13 @@ export default async function GraphPage({
                             <span className="text-[15px] font-medium text-gray-700">{item.name}</span>
                         </div>
 
-                        {/* Blue Badge for price, matching image_1d3998.png */}
                         <div className="bg-[#3b82f6] text-white px-3 py-1 rounded text-sm font-bold min-w-[85px] text-right">
                             {item.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </div>
                     </div>
                 ))}
-            </div>
+            </div >
+            */}
         </div>
     );
 }
