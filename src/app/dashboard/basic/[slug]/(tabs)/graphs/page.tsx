@@ -10,28 +10,28 @@ export default async function GraphPage({
     searchParams
 }: {
     params: Promise<{ slug: string }>,
-    searchParams: Promise<{dateString: string}>
+    searchParams: Promise<{date: string}>
 }) {
     const { slug } = await params;
-    const { dateString } = await searchParams;
+    const { date } = await searchParams;
     const supabase = await createClient();
 
     // 1. Strict Validation: If no date is provided, trigger 404 or Error
-    if (!dateString) {
+    if (!date) {
         return (
             <div className="p-10 text-center text-red-600 font-bold">
-                Error: A specific date is required to view graphs, {dateString}
+                Error: A specific date is required to view graphs, {date}
             </div>
         ); 
     }
 
     // 2. Format Validation: Ensure the string is a valid date
-    const dateObject = parseISO(dateString);
+    const dateObject = parseISO(date);
     if (!isValid(dateObject)) {
         return (
             <div className="p-10 text-center">
                 <h1 className="text-xl font-bold text-gray-800">Invalid Date Format</h1>
-                <p className="text-gray-500">The date &quot;{dateString}&quot; is not a valid time value.</p>
+                <p className="text-gray-500">The date &quot;{date}&quot; is not a valid time value.</p>
             </div>
         );
     }
@@ -59,7 +59,7 @@ export default async function GraphPage({
     const { data: rawItems } = await supabase
         .from('sales_items')
         .select('summary_group, gross, qty, item_type')
-        .eq('open_date', dateString)
+        .eq('open_date', date)
         .in('item_type', ['Sale_Item', 'Voided_Item']); // Fetch both at once
 
     // 2. Aggregate data by summary_group for the list and chart
@@ -112,7 +112,7 @@ export default async function GraphPage({
             {/* 2. Date Title Section */}
             <div className="py-4 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-lg">
-                    {format(new Date(dateString), 'EEEE, d MMMM yyyy')}
+                    {format(new Date(date), 'EEEE, d MMMM yyyy')}
                 </h2>
             </div>
 
