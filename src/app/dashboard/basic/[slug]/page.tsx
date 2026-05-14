@@ -84,13 +84,15 @@ export default async function SelectDayPage({
     return (
         <div className="flex flex-col min-h-screen bg-[#E5E5E5]">
             {/* Header - Matching image_a51306.png */}
-            <header className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300 items-center gap-4 sticky top-0 z-10">{/*className="bg-white border-b border-gray-300 px-4 py-3 flex items-center gap-4 sticky top-0 z-10">*/}
+            <header className="bg-[#F3F3F3] border-b border-gray-300 p-4sticky top-0 z-10">{/*className="bg-white border-b border-gray-300 px-4 py-3 flex items-center gap-4 sticky top-0 z-10">*/}
+                <div className="max-w-4xl mx-auto bg-white flex items-center gap-4">
                 <Link href="/portals/sales" className="text-gray-600 hover:text-black">
                     <ArrowLeft size={20} />
                 </Link>
                 <div className="flex items-center gap-2">
                     <Calendar size={18} className="text-gray-700" />
                     <h1 className="text-[15px] font-semibold text-gray-800">Select Day</h1>
+                </div>
                 </div>
             </header>
 
