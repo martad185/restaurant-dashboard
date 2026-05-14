@@ -1,8 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, MoreVertical, BarChart2, Clock, Star, List } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import Graph from '@/components/Graph';
+import { ArrowLeft, MoreVertical, PieChart, BarChart2, Clock, Star, List } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default async function GraphPage({
@@ -67,17 +67,12 @@ export default async function GraphPage({
     }, {} as Record<string, number>) || {};
 
     // 3. Clean up the data (Ensure no negative totals due to voids)
-    const chartData = Object.entries(sumGroupMap)
-        .map(([name, value]) => ({
-            name,
-            value: Math.max(0, Math.round(value * 100) / 100) // Voids shouldn't make a category negative
-        }))
-        .filter(item => item.value > 0) // Hide categories with 0 net sales
-        .sort((a, b) => b.value - a.value);
+    const chartData = Object.entries(sumGroupMap).map(([name, value]) => ({
+        name,
+        value: Math.round(value * 100) / 100
+    })).sort((a, b) => b.value - a.value);
 
-    // Define your color palette (Matches the vibrant look in image_1d3998.png)
     const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-
 
     return (
         //<div className="flex flex-col min-h-screen bg-white pb-20">
@@ -89,25 +84,7 @@ export default async function GraphPage({
                         <ArrowLeft size={22} />
                     </Link>
                     <div className="flex items-center gap-2">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={chartData}
-                                    innerRadius={60} // Makes it a donut like the image
-                                    outerRadius={100}
-                                    paddingAngle={2}
-                                    dataKey="value"
-                                >
-                                    {chartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip
-                                    formatter={(value: unknown) => `€${(value as number).toFixed(2)}`}
-                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                                />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        <PieChart size={20} />
                         <span className="font-bold text-lg">Graphs</span>
                     </div>
                 </div>
@@ -123,11 +100,7 @@ export default async function GraphPage({
 
             {/* 3. Pie Chart Placeholder */}
             {/* You can integrate a library like Recharts or Nivo here */}
-            <div className="flex justify-center py-8 bg-gray-50/50">
-                <div className="w-48 h-48 rounded-full border-[16px] border-blue-400 border-l-green-500 border-b-green-500 relative flex items-center justify-center">
-                    {/* This represents the visual from image_1d3998.png */}
-                </div>
-            </div>
+            <Graph chartData={chartData} />
 
             {/* 4. Summary Group List */}
             <div className="w-full px-4 space-y-2">
