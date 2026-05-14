@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, MoreVertical, PieChart, BarChart2, Clock, Star, List } from 'lucide-react';
+import { ArrowLeft, MoreVertical, BarChart2, Clock, Star, List } from 'lucide-react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { format } from 'date-fns';
 
 export default async function GraphPage({
@@ -10,11 +11,11 @@ export default async function GraphPage({
 }: {
     params: Promise<{ slug: string }>,
     //searchParams: Promise<{ start: string; end: string }>
-        searchParams: Promise<{date: string}>
+        searchParams: Promise<{dateString: string}>
 }) {
     const { slug } = await params;
     //const { start, end } = await searchParams;
-    const { date } = await searchParams;
+    const { dateString } = await searchParams;
     const supabase = await createClient();
 
     // 1. Fetch Restaurant & Sales Data
@@ -26,22 +27,58 @@ export default async function GraphPage({
 
     if (!restaurant) notFound();
 
-    const { data: sales } = await supabase
+    /*const { data: sales } = await supabase
         .from('sales_items')
-        .select('summary_group, gross')
+        .select('summary_group, gross, qty')
         .eq('restaurant_id', restaurant.id)
-        .eq('open_date', date);
+        .eq('open_date', date)
+        .eq('item_type','Sale_Item');
         //.gte('time_ord', start)
-        //.lte('time_ord', end);
+    //.lte('time_ord', end);
+    */
+
+    // Inside your Graphs Page component
+    const { data: rawItems } = await supabase
+        .from('sales_items')
+        .select('summary_group, gross, qty, item_type')
+        .eq('open_date', dateString)
+        .in('item_type', ['Sale_Item', 'Voided_Item']); // Fetch both at once
 
     // 2. Aggregate data by summary_group for the list and chart
-    const summaryGroupTotals = sales?.reduce((acc, item) => {
+    /*const summaryGroupTotals = sales?.reduce((acc, item) => {
         const group = item.summary_group || 'Uncategorized';
         acc[group] = (acc[group] || 0) + (item.gross || 0);
         return acc;
     }, {} as Record<string, number>) || {};
+    */
+    // 2. Aggregate and Subtract
+    const sumGroupMap = rawItems?.reduce((acc, item) => {
+        const summaryG = item.summary_group || 'Other';
 
-    const summaryGroups = Object.entries(summaryGroupTotals).sort((a, b) => b[1] - a[1]);
+        if (!acc[summaryG]) acc[summaryG] = 0;
+
+        if (item.item_type === 'Sale_Item') {
+            acc[summaryG] += (item.gross || 0) * (item.qty || 0);
+        } else if (item.item_type === 'Voided_Item') {
+            acc[summaryG] += item.gross; // Subtract the void
+        }
+
+        return acc;
+    }, {} as Record<string, number>) || {};
+
+    // 3. Clean up the data (Ensure no negative totals due to voids)
+    const chartData = Object.entries(sumGroupMap)
+        .map(([name, value]) => ({
+            name,
+            value: Math.max(0, Math.round(value * 100) / 100) // Voids shouldn't make a category negative
+        }))
+        .filter(item => item.value > 0) // Hide categories with 0 net sales
+        .sort((a, b) => b.value - a.value);
+
+    // Define your color palette (Matches the vibrant look in image_1d3998.png)
+    const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+
+
     return (
         //<div className="flex flex-col min-h-screen bg-white pb-20">
             <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
@@ -52,7 +89,25 @@ export default async function GraphPage({
                         <ArrowLeft size={22} />
                     </Link>
                     <div className="flex items-center gap-2">
-                        <PieChart size={20} />
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={chartData}
+                                    innerRadius={60} // Makes it a donut like the image
+                                    outerRadius={100}
+                                    paddingAngle={2}
+                                    dataKey="value"
+                                >
+                                    {chartData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip
+                                    formatter={(value: unknown) => `€${(value as number).toFixed(2)}`}
+                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
                         <span className="font-bold text-lg">Graphs</span>
                     </div>
                 </div>
@@ -62,7 +117,7 @@ export default async function GraphPage({
             {/* 2. Date Title Section */}
             <div className="py-4 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-lg">
-                    {format(new Date(date), 'EEEE, d MMMM yyyy')}
+                    {format(new Date(dateString), 'EEEE, d MMMM yyyy')}
                 </h2>
             </div>
 
@@ -75,30 +130,27 @@ export default async function GraphPage({
             </div>
 
             {/* 4. Summary Group List */}
-            <div className="flex-1 px-4">
-                {summaryGroups.map(([name, total]) => (
-                    <div key={name} className="flex justify-between items-center py-4 border-b border-gray-100 group">
+            <div className="w-full px-4 space-y-2">
+                {chartData.map((item, index) => (
+                    <div key={item.name} className="flex justify-between items-center py-3 border-b border-gray-50">
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-500 rounded-full p-1 text-white">
-                                <ArrowLeft className="rotate-180" size={14} />
+                            {/* The color indicator matching the graph slice */}
+                            <div
+                                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px]"
+                                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                            >
+                                <span className="rotate-180">▶</span>
                             </div>
-                            <span className="text-[16px] font-medium text-gray-800">{name}</span>
+                            <span className="text-[15px] font-medium text-gray-700">{item.name}</span>
                         </div>
-                        <div className="bg-blue-500 text-white px-3 py-1 rounded text-sm font-bold min-w-[80px] text-right">
-                            {total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
+                        {/* Blue Badge for price, matching image_1d3998.png */}
+                        <div className="bg-[#3b82f6] text-white px-3 py-1 rounded text-sm font-bold min-w-[85px] text-right">
+                            {item.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </div>
                     </div>
                 ))}
             </div>
-
-            {/* 5. Bottom Navigation Bar - Matching image_1d3998.png */}
-            <nav className="fixed bottom-0 left-0 right-0 bg-[#F8F9FA] border-t border-gray-300 flex justify-around py-2 shadow-lg">
-                <NavItem icon={<PieChart size={20} />} label="Graphs" active />
-                <NavItem icon={<BarChart2 size={20} />} label="Sales" />
-                <NavItem icon={<Clock size={20} />} label="Hour Sales" />
-                <NavItem icon={<Star size={20} />} label="Top 20 Sales" />
-                <NavItem icon={<List size={20} />} label="Category Sales" />
-            </nav>
         </div>
     );
 }
