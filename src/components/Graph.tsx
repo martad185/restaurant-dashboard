@@ -7,7 +7,7 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 interface Graph{
     name: string,
-    total: number
+    value: number
 }
 
 interface GraphProps {
@@ -53,7 +53,7 @@ export default function GraphClient({ chartData }: { chartData: Graph[] }) {
                             <span className="text-[15px] font-medium text-gray-700">{item.name}</span>
                         </div>
                         <div className="bg-[#3b82f6] text-white px-3 py-1 rounded text-sm font-bold min-w-[85px] text-right">
-                            {item.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            {item.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </div>
                     </div>
                 ))}
