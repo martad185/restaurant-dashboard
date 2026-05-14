@@ -2,21 +2,39 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Graph from '@/components/Graph';
-import { ArrowLeft, MoreVertical, PieChart, BarChart2, Clock, Star, List } from 'lucide-react';
-import { format } from 'date-fns';
+import { ArrowLeft, MoreVertical, PieChart } from 'lucide-react';
+import { format, isValid, parseISO } from 'date-fns';
 
 export default async function GraphPage({
     params,
     searchParams
 }: {
     params: Promise<{ slug: string }>,
-    //searchParams: Promise<{ start: string; end: string }>
-        searchParams: Promise<{dateString: string}>
+    searchParams: Promise<{dateString: string}>
 }) {
     const { slug } = await params;
-    //const { start, end } = await searchParams;
     const { dateString } = await searchParams;
     const supabase = await createClient();
+
+    // 1. Strict Validation: If no date is provided, trigger 404 or Error
+    if (!dateString) {
+        return (
+            <div className="p-10 text-center text-red-600 font-bold">
+                Error: A specific date is required to view graphs.
+            </div>
+        ); 
+    }
+
+    // 2. Format Validation: Ensure the string is a valid date
+    const dateObject = parseISO(dateString);
+    if (!isValid(dateObject)) {
+        return (
+            <div className="p-10 text-center">
+                <h1 className="text-xl font-bold text-gray-800">Invalid Date Format</h1>
+                <p className="text-gray-500">The date &quot;{dateString}&quot; is not a valid time value.</p>
+            </div>
+        );
+    }
 
     // 1. Fetch Restaurant & Sales Data
     const { data: restaurant } = await supabase
