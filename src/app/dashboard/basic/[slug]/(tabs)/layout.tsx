@@ -1,12 +1,13 @@
 // app/dashboard/basic/[slug]/(tabs)/layout.tsx
 import BottomNav from '@/components/BottomNav'
+import { Suspense } from 'react'
 
 export default async function TabsLayout({
     children,
     params,
 }: {
     children: React.ReactNode
-    params: Promise<{ slug: string }>
+    params: { slug: string }
 }) {
     const { slug } = await params
 
@@ -18,7 +19,9 @@ export default async function TabsLayout({
             </main>
 
             {/* The BottomNav is now only on these sub-pages */}
+            <Suspense fallback={<div className="h-12 bg-grey-100 animate-pulse" />}>
             <BottomNav slug={slug} />
+            </Suspense>
         </div>
     )
 }

@@ -1,12 +1,17 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { PieChart, BarChart2, Clock, Star, List } from 'lucide-react'
 
 export default function BottomNav({ slug }: { slug: string }) {
-  const pathname = usePathname()
 
+
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+
+    const currentDate = searchParams.get('date')
+        
   // Helper to check if a link is active
   const isActive = (path: string) => pathname.includes(path)
 
@@ -20,12 +25,18 @@ export default function BottomNav({ slug }: { slug: string }) {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-[#F8F9FA] border-t border-gray-300 flex justify-around py-2 shadow-lg z-50">
-      {navItems.map((item) => (
-        <Link
+          {navItems.map((item) => {
+              const fullHref = currentDate
+                  ? `${item.href}?date=${currentDate}`
+                  : item.href
+
+              const active = pathname.includes(item.href)
+              return (
+                <Link
           key={item.label}
-          href={item.href}
+          href={fullHref}
           className={`flex flex-col items-center gap-1 min-w-[64px] transition-colors ${
-            isActive(item.href) ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
+            active ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
           {item.icon}
@@ -33,7 +44,7 @@ export default function BottomNav({ slug }: { slug: string }) {
             {item.label}
           </span>
         </Link>
-      ))}
+      )})}
     </nav>
   )
 }
