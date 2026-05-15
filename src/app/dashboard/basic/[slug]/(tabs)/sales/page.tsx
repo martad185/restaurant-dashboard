@@ -67,7 +67,8 @@ export default async function SalesPage({
             </header>
 
             {/* Date Display */}
-            <div className="bg-white py-3 border-b border-gray-200 text-center">
+            {/*<div className="bg-white py-3 border-b border-gray-200 text-center">*/}
+                <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
                 <h2 className="text-[#003366] font-bold text-[17px]">
                     {format(parseISO(date), 'EEEE, dd MMMM yyyy')}
                 </h2>
