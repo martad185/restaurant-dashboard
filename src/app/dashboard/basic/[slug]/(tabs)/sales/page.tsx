@@ -36,7 +36,7 @@ export default async function SalesPage({
     // Adjust 'order_type' to match your column name (e.g., 'source' or 'terminal')
     const { data: rawItems } = await supabase
         .from('sales')
-        .select('sales_type, grosstotal')
+        .select('sales_type, nettotal')
         .eq('restaurant_id', restaurant.id)
         .eq('open_date', date);
 
