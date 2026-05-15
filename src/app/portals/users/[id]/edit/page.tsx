@@ -24,7 +24,7 @@ export default async function EditUserPage({
     return (
         <div className="min-h-screen bg-[#F8F9FA] p-4 md:p-12">
             <div className="max-w-2xl mx-auto">
-                <Link href="/portal/users" className="flex items-center gap-2 text-gray-500 hover:text-black mb-8">
+                <Link href="/portals/users" className="flex items-center gap-2 text-gray-500 hover:text-black mb-8">
                     <ChevronLeft size={20} /> Back to Users
                 </Link>
 
