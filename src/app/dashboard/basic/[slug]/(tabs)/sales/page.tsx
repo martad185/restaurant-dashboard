@@ -13,7 +13,13 @@ export default async function SalesPage({
     const { slug } = await params;
     const { date } = await searchParams;
 
-    if (!date) notFound();
+    if (!date)
+        return (
+            <div className="p-10 text-center text-red-600 font-bold">
+                Error: A specific date is required to view sales by sales type, {date}
+            </div>
+        ); 
+//        notFound();
 
     const supabase = await createClient();
 
