@@ -43,7 +43,7 @@ export default async function SalesPage({
     // 3. Aggregate Logic
     const salesBySource = rawItems?.reduce((acc, item) => {
         const source = item.sales_type || 'Other';
-        const amount = item.grosstotal || 0;
+        const amount = item.nettotal || 0;
 
         if (!acc[source]) acc[source] = 0;
 
