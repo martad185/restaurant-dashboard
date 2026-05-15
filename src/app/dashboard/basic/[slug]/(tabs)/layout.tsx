@@ -2,13 +2,16 @@
 import BottomNav from '@/components/BottomNav'
 import { Suspense } from 'react'
 
+// Update the interface here
+interface LayoutProps {
+    children: React.ReactNode
+    params: Promise<{ slug: string }> // Must be a Promise
+}
+
 export default async function TabsLayout({
     children,
     params,
-}: {
-    children: React.ReactNode
-    params: { slug: string }
-}) {
+}: LayoutProps) {
     const { slug } = await params
 
     return (
