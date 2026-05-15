@@ -56,7 +56,8 @@ export default async function SalesPage({
     const grandTotal = sortedSales.reduce((sum, [, val]) => sum + val, 0);
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#F0F2F5]">
+        <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
+            {/*<div className="flex flex-col min-h-screen bg-[#F0F2F5]">*/}
             {/* Dark Navy Header */}
             <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
@@ -67,8 +68,8 @@ export default async function SalesPage({
             </header>
 
             {/* Date Display */}
-            {/*<div className="bg-white py-3 border-b border-gray-200 text-center">*/}
-                <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
+            <div className="bg-white py-3 border-b border-gray-200 text-center">
+                
                 <h2 className="text-[#003366] font-bold text-[17px]">
                     {format(parseISO(date), 'EEEE, dd MMMM yyyy')}
                 </h2>
