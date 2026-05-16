@@ -36,9 +36,12 @@ export default async function SalesPage({
     // Adjust 'order_type' to match your column name (e.g., 'source' or 'terminal')
     const { data: rawItems } = await supabase
         .from('sales')
-        .select('sales_type, nettotal')
+        .select('sales_type, nettotal, grosstotal')
         .eq('restaurant_id', restaurant.id)
         .eq('open_date', date);
+
+    let runningGrandGross = 0;
+    let runningGrandNet = 0;
 
     // 3. Aggregate Logic
     const salesBySource = rawItems?.reduce((acc, item) => {
@@ -48,11 +51,15 @@ export default async function SalesPage({
         if (!acc[source]) acc[source] = 0;
 
         acc[source] += amount;
+        runningGrandGross += item.grosstotal
+        runningGrandNet += item.grosstotal
 
         return acc;
     }, {} as Record<string, number>) || {};
 
+    
     const sortedSales = Object.entries(salesBySource).sort((a, b) => b[1] - a[1]);
+    const totalTax = Math.max(0, runningGrandGross - runningGrandNet);
     const grandTotal = sortedSales.reduce((sum, [, val]) => sum + val, 0);
 
     return (
@@ -80,7 +87,7 @@ export default async function SalesPage({
                 <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4">
                     <span className="text-gray-500 text-sm font-bold">Total Sales</span>
                     <div className="text-[#003366] text-3xl font-bold mt-1">
-                        {grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        {runningGrandGross.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </div>
                 </div>
 
@@ -94,6 +101,12 @@ export default async function SalesPage({
                             </div>
                         </div>
                     ))}
+                    <div className="flex justify-between items-center px-4 py-4">
+                        <span className="text-[15px] text-gray-700 font-medium">Tax</span>
+                        <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                            {totalTax.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </div>
+                    </div>
 
                     {/* Totals with Tax Row */}
                     <div className="flex justify-between items-center px-4 py-4 bg-gray-50/50">
