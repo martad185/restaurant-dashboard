@@ -14,12 +14,7 @@ export default async function SalesPage({
     const { date } = await searchParams;
 
     if (!date)
-        return (
-            <div className="p-10 text-center text-red-600 font-bold">
-                Error: A specific date is required to view sales by sales type, {date}
-            </div>
-        ); 
-//        notFound();
+        notFound();
 
     const supabase = await createClient();
 
@@ -32,13 +27,13 @@ export default async function SalesPage({
 
     if (!restaurant) notFound();
 
-    // 2. Fetch Sales Data (Grouping by order_type or source)
-    // Adjust 'order_type' to match your column name (e.g., 'source' or 'terminal')
+    // 2. Fetch Sales Data (Grouping by sales_type)
     const { data: rawItems } = await supabase
         .from('sales')
         .select('sales_type, nettotal, grosstotal')
         .eq('restaurant_id', restaurant.id)
-        .eq('open_date', date);
+        .eq('open_date', date)
+        .order('sales_type', { ascending: true });
 
     let runningGrandGross = 0;
     let runningGrandNet = 0;
@@ -60,7 +55,18 @@ export default async function SalesPage({
     
     const sortedSales = Object.entries(salesBySource).sort((a, b) => b[1] - a[1]);
     const totalTax = Math.max(0, runningGrandGross - runningGrandNet);
-   // const grandTotal = sortedSales.reduce((sum, [, val]) => sum + val, 0);
+    
+    //4. Fetch Refunds Data (Placeholder for now)
+    const { data: refunds } = await supabase
+        .from('sales_items')
+        .select('gross')
+        .eq('restaurant_id', restaurant.id)
+        .eq('open_date', date)
+        .eq('item_type', 'Voided_Item');
+
+    //5. Aggregate Refunds
+    const totalRefunds = refunds?.reduce((acc, item) => acc + (item.gross || 0), 0) || 0;
+
 
     return (
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
@@ -117,10 +123,13 @@ export default async function SalesPage({
                     </div>
                 </div>
 
-                {/* Refunds Placeholder Section */}
-                <div className="pt-2">
-                    <h3 className="text-gray-800 font-bold text-lg">Refunds</h3>
+                {/* Refunds Section */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4">
+                    <h3 className="text-gray-800 font-bold text-md">Refunds</h3>
                     <div className="h-px bg-gray-300 w-full mt-1"></div>
+                    <div className="text-[#003366] text-3xl font-bold mt-1">
+                        {totalRefunds.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
                 </div>
             </main>
         </div>
