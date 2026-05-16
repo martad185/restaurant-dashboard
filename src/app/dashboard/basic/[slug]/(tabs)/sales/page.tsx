@@ -60,7 +60,7 @@ export default async function SalesPage({
     
     const sortedSales = Object.entries(salesBySource).sort((a, b) => b[1] - a[1]);
     const totalTax = Math.max(0, runningGrandGross - runningGrandNet);
-    const grandTotal = sortedSales.reduce((sum, [, val]) => sum + val, 0);
+   // const grandTotal = sortedSales.reduce((sum, [, val]) => sum + val, 0);
 
     return (
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
@@ -94,14 +94,14 @@ export default async function SalesPage({
                 {/* Sales Breakdown List */}
                 <div className="bg-white rounded-md shadow-sm border border-gray-200 divide-y divide-gray-100">
                     {sortedSales.map(([source, total]) => (
-                        <div key={source} className="flex justify-between items-center px-4 py-4">
+                        <div key={source} className="flex justify-between items-center px-4 py-2">
                             <span className="text-[15px] text-gray-700 font-medium">{source}</span>
                             <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
                                 {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </div>
                         </div>
                     ))}
-                    <div className="flex justify-between items-center px-4 py-4">
+                    <div className="flex justify-between items-center px-4 py-2">
                         <span className="text-[15px] text-gray-700 font-medium">Tax</span>
                         <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
                             {totalTax.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -112,7 +112,7 @@ export default async function SalesPage({
                     <div className="flex justify-between items-center px-4 py-4 bg-gray-50/50">
                         <span className="text-[15px] text-gray-900 font-bold">Totals with Tax</span>
                         <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
-                            {grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            {runningGrandGross.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </div>
                     </div>
                 </div>
