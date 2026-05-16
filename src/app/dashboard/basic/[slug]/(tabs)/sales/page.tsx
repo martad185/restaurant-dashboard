@@ -52,7 +52,7 @@ export default async function SalesPage({
 
         acc[source] += amount;
         runningGrandGross += item.grosstotal
-        runningGrandNet += item.grosstotal
+        runningGrandNet += item.nettotal
 
         return acc;
     }, {} as Record<string, number>) || {};
