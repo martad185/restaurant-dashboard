@@ -77,8 +77,9 @@ export default async function SalesPage({
         .single();
 
     if (error) {
-        notFound();
-        //return <div>Restaurant &quot;{slug}&quot; not found in database.</div>;
+        //notFound();
+        return <div>RPC Error Details:{error.message}, {error.details}, {error.hint}</div>;
+            //console.error("RPC Error Details:", error.message, error.details, error.hint);
     }
     // Use .single() since it returns exactly one row of summary data
     // Cast the data directly
