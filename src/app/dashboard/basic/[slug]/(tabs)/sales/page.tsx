@@ -190,18 +190,23 @@ export default async function SalesPage({
                 </div>
                 {/* Counts Section */ }
                 <div className="bg-white rounded-md shadow-sm border border-gray-200">
-
-                    <span className="text-[15px] text-gray-700 font-medium">Customer Count</span>
-                    <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
-                        {custCount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    <div className="flex justify-between items-center px-4 py-2">
+                        <span className="text-[15px] text-gray-700 font-medium">Customer Count</span>
+                        <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                            {custCount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </div>
                     </div>
-                    <span className="text-[15px] text-gray-700 font-medium">Transaction Count</span>
-                    <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
-                        {transactCount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    <div className="flex justify-between items-center px-4 py-2">
+                        <span className="text-[15px] text-gray-700 font-medium">Transaction Count</span>
+                        <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                            {transactCount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </div>
                     </div>
-                    <span className="text-[15px] text-gray-700 font-medium">Avg Sale per Transaction</span>
-                    <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
-                        {avgSalePerTransact.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    <div className="flex justify-between items-center px-4 py-2">
+                        <span className="text-[15px] text-gray-700 font-medium">Avg Sale per Transaction</span>
+                        <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                            {avgSalePerTransact.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </div>
                     </div>
                 </div>
                 <div className="bg-white rounded-md shadow-sm border border-gray-200">
