@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, parse } from 'date-fns';
 import { MoreVertical, BarChart2 } from 'lucide-react';
+
 
 export default async function SalesPage({
     params,
@@ -67,6 +68,61 @@ export default async function SalesPage({
     //5. Aggregate Refunds
     const totalRefunds = refunds?.reduce((acc, item) => acc + (item.gross || 0), 0) || 0;
 
+    //6. Fetch number of transactions & customers (Placeholder for now)
+    const { data: counts, error } = await supabase 
+        .rpc('get_sales_aggregates', {
+            res_id: restaurant.id,
+            target_date: date
+        })
+        .single();
+
+    if (error) {
+        notFound();
+        //return <div>Restaurant &quot;{slug}&quot; not found in database.</div>;
+    }
+    // Use .single() since it returns exactly one row of summary data
+    // Cast the data directly
+    const countsCast = counts as {
+        cust_count: number;
+        transact_count: number;
+        open_time: string | null;
+        close_time: string | null;
+    } | null;
+
+    // Access your fields cleanly
+    const custCount = countsCast?.cust_count || 0;
+    const transactCount = countsCast?.transact_count || 0;
+    const avgSalePerTransact = transactCount > 0 ? runningGrandGross / transactCount : 0;
+    const openTime = countsCast?.open_time || null;
+    const closeTime = countsCast?.close_time || null;
+
+    // 1. Fallback default if openTime is null or undefined
+    let formattedOpenTime = '--:--';
+    let formattedCloseTime = '--:--';
+
+    if (openTime) {
+        // If your database returns a full ISO timestamp string (e.g., "2026-05-17T08:30:00Z")
+        if (openTime.includes('T')) {
+            formattedOpenTime = format(new Date(openTime), 'hh:mm a');
+        }
+        // If your database returns a plain time string (e.g., "08:30:00" or "14:45:00")
+        else {
+            const parsedTime = parse(openTime.substring(0, 5), 'HH:mm', new Date());
+            formattedOpenTime = format(parsedTime, 'hh:mm a');
+        }
+    }
+
+    if (closeTime) {
+        // If your database returns a full ISO timestamp string (e.g., "2026-05-17T08:30:00Z")
+        if (closeTime.includes('T')) {
+            formattedCloseTime = format(new Date(closeTime), 'hh:mm a');
+        }
+        // If your database returns a plain time string (e.g., "08:30:00" or "14:45:00")
+        else {
+            const parsedTime = parse(closeTime.substring(0, 5), 'HH:mm', new Date());
+            formattedOpenTime = format(parsedTime, 'hh:mm a');
+        }
+    }
 
     return (
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
@@ -127,8 +183,38 @@ export default async function SalesPage({
                 <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4">
                     <h3 className="text-gray-800 font-bold text-md">Refunds</h3>
                     <div className="h-px bg-gray-300 w-full mt-1"></div>
-                    <div className="text-[#003366] text-3xl font-bold mt-1">
+                    <div className="text-[#003366] text-2xl font-bold mt-1">
                         {totalRefunds.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
+                </div>
+                {/* Counts Section */ }
+                <div className="bg-white rounded-md shadow-sm border border-gray-200">
+
+                    <span className="text-[15px] text-gray-700 font-medium">Customer Count</span>
+                    <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                        {custCount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
+                    <span className="text-[15px] text-gray-700 font-medium">Transaction Count</span>
+                    <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                        {transactCount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
+                    <span className="text-[15px] text-gray-700 font-medium">Avg Sale per Transaction</span>
+                    <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
+                        {avgSalePerTransact.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
+                </div>
+                <div className="bg-white rounded-md shadow-sm border border-gray-200">
+                    <div className="bg-white py-3 border-b border-gray-200 text-center">
+
+                        <h2 className="text-[#003366] font-bold text-[17px]">
+                            Open Time: {formattedOpenTime}
+                        </h2>
+                    </div>
+                    <div className="bg-white py-3 border-b border-gray-200 text-center">
+
+                        <h2 className="text-[#003366] font-bold text-[17px]">
+                            Close Time: {formattedCloseTime}
+                        </h2>
                     </div>
                 </div>
             </main>
