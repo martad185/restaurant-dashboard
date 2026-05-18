@@ -89,18 +89,18 @@ export default async function HourlySalesPage({
                 {/* Metrics Dashboard Row */}
                 <div className="grid grid-cols-3 gap-3">
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
-                        <Users size={18} className="text-gray-400 mb-1" />
+                        {/*<Users size={18} className="text-gray-400 mb-1" />*/}
                         <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Customers</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">{counts?.cust_count || 0}</span>
                     </div>
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
-                        <Receipt size={18} className="text-gray-400 mb-1" />
-                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Trxs</span>
+                        {/*<Receipt size={18} className="text-gray-400 mb-1" />*/}
+                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Transactions</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">{counts?.transact_count || 0}</span>
                     </div>
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
-                        <ArrowUpRight size={18} className="text-gray-400 mb-1" />
-                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Avg/Trx</span>
+                        {/*<ArrowUpRight size={18} className="text-gray-400 mb-1" />*/}
+                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Avg/Transaction</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">
                             {counts?.transact_count
                                 ? (totalGross / counts.transact_count).toLocaleString(undefined, { maximumFractionDigits: 2 })
