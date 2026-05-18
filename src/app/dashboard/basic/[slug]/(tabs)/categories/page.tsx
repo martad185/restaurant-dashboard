@@ -5,8 +5,7 @@ import { List, MoreVertical } from 'lucide-react';
 
 interface CategoryRow {
     category_name: string;
-    category_net: number;
-    category_gross: number;
+    category_total: number;
 }
 
 export default async function CategorySalesPage({
@@ -38,7 +37,7 @@ export default async function CategorySalesPage({
     const categoriesList = (categoryData as CategoryRow[] | null) || [];
 
     // Calculate total layout context metrics
-    const grandCategoryTotal = categoriesList.reduce((sum, c) => sum + Number(c.category_gross), 0);
+    const grandCategoryTotal = categoriesList.reduce((sum, c) => sum + Number(c.category_total), 0);
 
     return (
         // <div className="flex flex-col min-h-screen bg-[#F0F2F5]">
@@ -73,7 +72,7 @@ export default async function CategorySalesPage({
                         categoriesList.map((cat) => {
                             // Calculate percentage contribution to overall business dynamically
                             const percentage = grandCategoryTotal > 0
-                                ? (Number(cat.category_gross) / grandCategoryTotal) * 100
+                                ? (Number(cat.category_total) / grandCategoryTotal) * 100
                                 : 0;
 
                             return (
@@ -87,7 +86,7 @@ export default async function CategorySalesPage({
                                         </span>
                                     </div>
                                     <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[75px] text-center tabular-nums">
-                                        {Number(cat.category_gross).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        {Number(cat.category_total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </div>
                                 </div>
                             );
