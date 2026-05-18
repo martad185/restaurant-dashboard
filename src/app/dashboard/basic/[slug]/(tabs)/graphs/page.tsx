@@ -80,31 +80,16 @@ export default async function GraphPage({
         summary_name: string | null;
         summary_total: number;
         
-    } | null;
+    }[] | null;
 
-    // 2. Aggregate data by summary_group for the list and chart
-    /*const summaryGroupTotals = sales?.reduce((acc, item) => {
-        const group = item.summary_group || 'Uncategorized';
-        acc[group] = (acc[group] || 0) + (item.gross || 0);
-        return acc;
-    }, {} as Record<string, number>) || {};
-    */
-    // 2. Aggregate and Subtract
-    /*const sumGroupMap = rawItems?.reduce((acc, item) => {
-        const summaryG = item.summary_group || 'Other';
+    const sumGroupMap = salesSummaryCast
+        ? salesSummaryCast.reduce((acc, row) => {
+            const name = row.summary_name || 'Other';
+            acc[name] = (acc[name] || 0) + (row.summary_total || 0);
+            return acc;
+        }, {} as Record<string, number>)
+        : {};
 
-        if (!acc[summaryG]) acc[summaryG] = 0;
-
-        if (item.item_type === 'Sale_Item') {
-            acc[summaryG] += (item.gross || 0) * (item.qty || 0);
-        } else if (item.item_type === 'Voided_Item') {
-            acc[summaryG] += item.gross; // Subtract the void
-        }
-
-        return acc;
-    }, {} as Record<string, number>) || {};
-    */
-    const sumGroupMap = salesSummaryCast ? { [salesSummaryCast.summary_name || 'Other']: salesSummaryCast.summary_total } : {};
     // 3. Clean up the data (Ensure no negative totals due to voids)
     const chartData = Object.entries(sumGroupMap).map(([name, value]) => ({
         name,
