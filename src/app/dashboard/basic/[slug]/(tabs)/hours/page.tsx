@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, parseISO, parse } from 'date-fns';
 import { Clock, MoreVertical, Users, Receipt, ArrowUpRight } from 'lucide-react';
