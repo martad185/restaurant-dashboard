@@ -67,7 +67,8 @@ export default async function HourlySalesPage({
     const totalGross = hourlySales.reduce((sum, h) => sum + Number(h.hourly_gross), 0);
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#F0F2F5]">
+        //<div className="flex flex-col min-h-screen bg-[#F0F2F5]">
+        <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* Dark Navy Header */}
             <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
