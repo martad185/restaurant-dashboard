@@ -115,7 +115,7 @@ export default async function HourlySalesPage({
                         <div className="p-8 text-center text-gray-400 text-sm">No sales entries logged for this day.</div>
                     ) : (
                         hourlySales.map((hourRow) => (
-                            <div key={hourRow.sale_hour} className="flex justify-between items-center px-4 py-3.5">
+                            <div key={hourRow.sale_hour} className="flex justify-between items-center px-4 py-2.5">
                                 <div className="flex flex-col">
                                     <span className="text-[15px] text-gray-800 font-semibold">
                                         {formatHourLabel(hourRow.sale_hour)}
