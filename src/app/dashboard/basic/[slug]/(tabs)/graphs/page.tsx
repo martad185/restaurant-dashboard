@@ -78,7 +78,7 @@ export default async function GraphPage({
     // Use .single() since it returns exactly one row of summary data
     // Cast the data directly
     const salesSummaryCast = salesBySummary as {
-        summary_group: string | null;
+        summary_name: string | null;
         summary_total: number;
         
     } | null;
@@ -105,7 +105,7 @@ export default async function GraphPage({
         return acc;
     }, {} as Record<string, number>) || {};
     */
-    const sumGroupMap = salesSummaryCast ? { [salesSummaryCast.summary_group || 'Other']: salesSummaryCast.summary_total } : {};
+    const sumGroupMap = salesSummaryCast ? { [salesSummaryCast.summary_name || 'Other']: salesSummaryCast.summary_total } : {};
     // 3. Clean up the data (Ensure no negative totals due to voids)
     const chartData = Object.entries(sumGroupMap).map(([name, value]) => ({
         name,
