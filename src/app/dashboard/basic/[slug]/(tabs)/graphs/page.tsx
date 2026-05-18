@@ -64,7 +64,7 @@ export default async function GraphPage({
 
     //Fetch sales by summary group using RPC
     const { data: salesBySummary, error } = await supabase
-        .rpc('get_sales_by_summary', {
+        .rpc('get_sales_summary', {
             res_id: restaurant.id,
             target_date: date
         })
