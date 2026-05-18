@@ -31,31 +31,29 @@ export default async function SalesPage({
     // 2. Fetch Sales Data (Grouping by sales_type)
     const { data: rawItems } = await supabase
         .from('sales')
-        .select('sales_type, nettotal, grosstotal')
+        .select('sales_type, grosstotal')
         .eq('restaurant_id', restaurant.id)
         .eq('open_date', date)
         .order('sales_type', { ascending: true });
 
     let runningGrandGross = 0;
-    let runningGrandNet = 0;
 
     // 3. Aggregate Logic
     const salesBySource = rawItems?.reduce((acc, item) => {
         const source = item.sales_type || 'Other';
-        const amount = item.nettotal || 0;
+        const amount = item.grosstotal || 0;
 
         if (!acc[source]) acc[source] = 0;
 
         acc[source] += amount;
         runningGrandGross += item.grosstotal
-        runningGrandNet += item.nettotal
 
         return acc;
     }, {} as Record<string, number>) || {};
 
     
     const sortedSales = Object.entries(salesBySource).sort((a, b) => b[1] - a[1]);
-    const totalTax = Math.max(0, runningGrandGross - runningGrandNet);
+    //const totalTax = Math.max(0, runningGrandGross - runningGrandNet);
     
     //4. Fetch Refunds Data (Placeholder for now)
     const { data: refunds } = await supabase
@@ -164,16 +162,10 @@ export default async function SalesPage({
                             </div>
                         </div>
                     ))}
-                    <div className="flex justify-between items-center px-4 py-2">
-                        <span className="text-[15px] text-gray-700 font-medium">Tax</span>
-                        <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
-                            {totalTax.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
 
                     {/* Totals with Tax Row */}
                     <div className="flex justify-between items-center px-4 py-4 bg-gray-50/50">
-                        <span className="text-[15px] text-gray-900 font-bold">Totals with Tax</span>
+                        <span className="text-[15px] text-gray-900 font-bold">Totals</span>
                         <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
                             {runningGrandGross.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </div>
