@@ -76,7 +76,7 @@ export default async function CategorySalesPage({
                                 : 0;
 
                             return (
-                                <div key={cat.category_name} className="flex justify-between items-center px-4 py-4">
+                                <div key={cat.category_name} className="flex justify-between items-center px-4 py-2.5">
                                     <div className="flex flex-col min-w-0">
                                         <span className="text-[15px] text-gray-800 font-semibold truncate">
                                             {cat.category_name}
