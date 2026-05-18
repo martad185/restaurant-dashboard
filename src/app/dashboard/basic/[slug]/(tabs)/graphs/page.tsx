@@ -68,7 +68,6 @@ export default async function GraphPage({
             res_id: restaurant.id,
             target_date: date
         })
-        .single();
 
     if (error) {
         //notFound();
