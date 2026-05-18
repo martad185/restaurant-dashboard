@@ -56,11 +56,32 @@ export default async function GraphPage({
     */
 
     // Inside your Graphs Page component
-    const { data: rawItems } = await supabase
+    /*const { data: rawItems } = await supabase
         .from('sales_items')
         .select('summary_group, gross, qty, item_type')
         .eq('open_date', date)
-        .in('item_type', ['Sale_Item', 'Voided_Item']); // Fetch both at once
+        .in('item_type', ['Sale_Item', 'Voided_Item']); */// Fetch both at once
+
+    //Fetch sales by summary group using RPC
+    const { data: salesBySummary, error } = await supabase
+        .rpc('get_sales_by_summary', {
+            res_id: restaurant.id,
+            target_date: date
+        })
+        .single();
+
+    if (error) {
+        //notFound();
+        return <div>RPC Error Details:{error.message}, {error.details}, {error.hint}</div>;
+        //console.error("RPC Error Details:", error.message, error.details, error.hint);
+    }
+    // Use .single() since it returns exactly one row of summary data
+    // Cast the data directly
+    const salesSummaryCast = salesBySummary as {
+        summary_group: string | null;
+        summary_total: number;
+        
+    } | null;
 
     // 2. Aggregate data by summary_group for the list and chart
     /*const summaryGroupTotals = sales?.reduce((acc, item) => {
@@ -70,7 +91,7 @@ export default async function GraphPage({
     }, {} as Record<string, number>) || {};
     */
     // 2. Aggregate and Subtract
-    const sumGroupMap = rawItems?.reduce((acc, item) => {
+    /*const sumGroupMap = rawItems?.reduce((acc, item) => {
         const summaryG = item.summary_group || 'Other';
 
         if (!acc[summaryG]) acc[summaryG] = 0;
@@ -83,7 +104,8 @@ export default async function GraphPage({
 
         return acc;
     }, {} as Record<string, number>) || {};
-
+    */
+    const sumGroupMap = salesSummaryCast ? { [salesSummaryCast.summary_group || 'Other']: salesSummaryCast.summary_total } : {};
     // 3. Clean up the data (Ensure no negative totals due to voids)
     const chartData = Object.entries(sumGroupMap).map(([name, value]) => ({
         name,
