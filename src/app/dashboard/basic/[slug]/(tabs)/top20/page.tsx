@@ -73,7 +73,7 @@ export default async function Top20SalesPage({
                             const isTop3 = rank <= 3;
 
                             return (
-                                <div key={item.item_name} className="flex justify-between items-center px-4 py-3.5 group">
+                                <div key={item.item_name} className="flex justify-between items-center px-4 py-2.5 group">
                                     <div className="flex items-center gap-3 min-w-0">
                                         {/* Rank Position Identifier */}
                                         <div className={`flex items-center justify-center h-6 w-6 rounded-full text-xs font-bold shrink-0 ${rank === 1 ? 'bg-amber-100 text-amber-700' :
