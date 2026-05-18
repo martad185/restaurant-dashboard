@@ -55,7 +55,7 @@ export default async function Top20SalesPage({
                     {format(parseISO(date), 'EEEE, dd MMMM yyyy')}
                 </h2>
                 <p className="text-xs text-gray-400 font-medium mt-0.5">
-                    Best performing items ranked by quantity sold
+                    Best performing items ranked by total sales per item for the selected date.
                 </p>
             </div>
 
