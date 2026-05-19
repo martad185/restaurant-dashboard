@@ -206,7 +206,7 @@ export default async function SalesPage({
                     <div className="flex justify-between items-center px-4 py-2">
                         <span className="text-[15px] text-gray-700 font-medium">Avg Sale per Transaction</span>
                         <div className="bg-[#4A90E2] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[70px] text-center">
-                            {avgSalePerTransact.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            {avgSalePerTransact.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                     </div>
                 </div>
