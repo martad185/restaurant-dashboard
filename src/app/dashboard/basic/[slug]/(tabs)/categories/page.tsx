@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
-import { List, MoreVertical } from 'lucide-react';
+import { List } from 'lucide-react';
 import  Header  from "@/components/Header";
 
 interface CategoryRow {
@@ -21,6 +21,14 @@ export default async function CategorySalesPage({
 
     if (!date) notFound();
     const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    const { count } = await supabase 
+        .from('restaurant_members')
+        .select('*', { count: 'exact', head: true})
+        .eq('user_id', user?.id)
+
+    const multipleRestaurants = (count || 0) > 1;
 
     // 1. Fetch Restaurant
     const { data: restaurant } = await supabase
@@ -44,7 +52,11 @@ export default async function CategorySalesPage({
         // <div className="flex flex-col min-h-screen bg-[#F0F2F5]">
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* Dark Navy Header */}
-            <Header title="Sales by Report Category" icon={<List size={22} />} />
+            <Header
+                title="Sales by Report Category"
+                icon={<List size={22} />}
+                showChangeStore={multipleRestaurants}
+            />
             {/* <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <List size={22} />

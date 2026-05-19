@@ -19,6 +19,13 @@ export default async function SalesPage({
         notFound();
 
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const { count } = await supabase
+        .from('restaurant_members')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user?.id)
+
+    const multipleRestaurants = (count || 0) > 1;
 
     // 1. Fetch Restaurant
     const { data: restaurant } = await supabase
@@ -128,7 +135,7 @@ export default async function SalesPage({
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/*<div className="flex flex-col min-h-screen bg-[#F0F2F5]">*/}
             {/* Dark Navy Header */}
-            <Header title="Sales by Sales Type" icon={<BarChart2 size={22} />} />
+            <Header title="Sales by Sales Type" icon={<BarChart2 size={22} />} showChangeStore={multipleRestaurants} />
             {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <BarChart2 size={22} />

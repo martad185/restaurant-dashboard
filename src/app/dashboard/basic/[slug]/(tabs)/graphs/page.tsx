@@ -37,6 +37,14 @@ export default async function GraphPage({
         );
     }
 
+    const { data: { user } } = await supabase.auth.getUser();
+    const { count } = await supabase
+        .from('restaurant_members')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user?.id)
+
+    const multipleRestaurants = (count || 0) > 1;
+
     // 1. Fetch Restaurant & Sales Data
     const { data: restaurant } = await supabase
         .from('restaurants')
@@ -103,7 +111,7 @@ export default async function GraphPage({
         //<div className="flex flex-col min-h-screen bg-white pb-20">
             <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* 1. Header - Matching deep navy brand color */}
-            <Header title="Sales by Summary Group" icon={<PieChart size={20} />} />
+            <Header title="Sales by Summary Group" icon={<PieChart size={20} />} showChangeStore={multipleRestaurants} />
             {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <Link href={`/dashboard/basic/${slug}`}>
