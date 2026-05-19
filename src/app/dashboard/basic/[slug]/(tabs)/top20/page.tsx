@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
-import { Star, MoreVertical, Trophy } from 'lucide-react';
+import { Star, Trophy } from 'lucide-react';
+import Header from '@/components/Header';
 
 interface TopItemRow {
     item_name: string;
@@ -35,20 +36,23 @@ export default async function Top20SalesPage({
     const { data: top20Data, error } = await supabase
         .rpc('get_top_20_sales', { res_id: restaurant.id, target_date: date });
 
+    if (error) notFound();
+
     const itemsList = (top20Data as TopItemRow[] | null) || [];
 
     return (
         //<div className="flex flex-col min-h-screen bg-[#F0F2F5]">
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* Dark Navy Header */}
-            <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
+            <Header title="Top 20 Sales" icon={<Star size={22} className="fill-yellow-400 text-yellow-400" />} />
+            {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <Star size={22} className="fill-yellow-400 text-yellow-400" />
                     <span className="font-bold text-lg">Top 20 Sales</span>
                 </div>
                 <MoreVertical size={22} />
             </header>
-
+            */}
             {/* Date Display Context Banner */}
             <div className="bg-white py-3 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-[17px]">
@@ -70,7 +74,7 @@ export default async function Top20SalesPage({
                         itemsList.map((item, index) => {
                             const rank = index + 1;
                             // Style the top 3 items beautifully with colors matching your status
-                            const isTop3 = rank <= 3;
+                            //const isTop3 = rank <= 3;
 
                             return (
                                 <div key={item.item_name} className="flex justify-between items-center px-4 py-2.5 group">

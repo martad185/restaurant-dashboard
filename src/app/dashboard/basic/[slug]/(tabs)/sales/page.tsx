@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, parseISO, parse } from 'date-fns';
-import { MoreVertical, BarChart2 } from 'lucide-react';
+import { BarChart2 } from 'lucide-react';
+import Header from '@/components/Header';
 
 
 export default async function SalesPage({
@@ -127,14 +128,15 @@ export default async function SalesPage({
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/*<div className="flex flex-col min-h-screen bg-[#F0F2F5]">*/}
             {/* Dark Navy Header */}
-            <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
+            <Header title="Sales by Sales Type" icon={<BarChart2 size={22} />} />
+            {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <BarChart2 size={22} />
                     <span className="font-bold text-lg">Sales</span>
                 </div>
                 <MoreVertical size={22} />
             </header>
-
+            */}
             {/* Date Display */}
             <div className="bg-white py-3 border-b border-gray-200 text-center">
                 

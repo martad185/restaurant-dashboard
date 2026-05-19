@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, parseISO, parse } from 'date-fns';
-import { Clock, MoreVertical, Users, Receipt, ArrowUpRight } from 'lucide-react';
+import { Clock, MoreVertical } from 'lucide-react';
+import Header from '@/components/Header';
 
 interface HourlyRow {
     sale_hour: number;
@@ -70,14 +71,15 @@ export default async function HourlySalesPage({
         //<div className="flex flex-col min-h-screen bg-[#F0F2F5]">
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* Dark Navy Header */}
-            <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
+            <Header title="Hourly Sales" icon={<Clock size={22} />} />
+            {/* <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <Clock size={22} />
                     <span className="font-bold text-lg">Hourly Sales</span>
                 </div>
                 <MoreVertical size={22} />
             </header>
-
+            */}
             {/* Date Context Ribbon */}
             <div className="bg-white py-3 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-[17px]">

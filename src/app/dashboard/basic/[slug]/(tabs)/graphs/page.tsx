@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Graph from '@/components/Graph';
 import { ArrowLeft, MoreVertical, PieChart } from 'lucide-react';
 import { format, isValid, parseISO } from 'date-fns';
+import Header from '@/components/Header';
 
 export default async function GraphPage({
     params,
@@ -102,7 +103,8 @@ export default async function GraphPage({
         //<div className="flex flex-col min-h-screen bg-white pb-20">
             <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* 1. Header - Matching deep navy brand color */}
-            <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
+            <Header title="Sales by Summary Group" icon={<PieChart size={20} />} />
+            {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <Link href={`/dashboard/basic/${slug}`}>
                         <ArrowLeft size={22} />
@@ -113,7 +115,7 @@ export default async function GraphPage({
                     </div>
                 </div>
                 <MoreVertical size={22} />
-            </header>
+            </header>*/}
 
             {/* 2. Date Title Section */}
             <div className="py-4 border-b border-gray-200 text-center">
