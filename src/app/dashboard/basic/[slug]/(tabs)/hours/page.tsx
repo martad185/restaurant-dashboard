@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { format, parseISO, parse } from 'date-fns';
-import { Clock, MoreVertical } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import Header from '@/components/Header';
 
 interface HourlyRow {
@@ -110,7 +110,7 @@ export default async function HourlySalesPage({
                     </div>
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
                         {/*<ArrowUpRight size={18} className="text-gray-400 mb-1" />*/}
-                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Avg/Transaction</span>
+                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Avg/Trans</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">
                             {counts?.transact_count
                                 ? (totalGross / counts.transact_count).toLocaleString(undefined, { maximumFractionDigits: 2 })
