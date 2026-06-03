@@ -8,8 +8,8 @@ interface RawRestaurantData {
     id: string;
     name: string;
     slug: string;
-    sales_items: {
-        gross: number;
+    sales: {
+        grosstotal: number;
     }[];
 }
 
@@ -26,8 +26,7 @@ export default async function SalesPortalPage() {
         .from('restaurants')
         .select('id, name, slug, restaurant_members!inner(user_id),sales(grosstotal)')
         .eq('restaurant_members.user_id', user.id)
-        .filter('sales_items.time_ord', 'gte', todayStart)
-        .filter('sales_items.time_ord', 'lte', todayEnd);
+        .filter('sales.time_end', 'gte', todayStart);
 
     if (error) return <div className="p-4 text-red-500">Error: {error.message}</div>;
 
@@ -35,7 +34,7 @@ export default async function SalesPortalPage() {
     const rawData = (data as unknown) as RawRestaurantData[];
 
     const restaurantSales = rawData.map((res) => {
-        const total = res.sales_items && res.sales_items.length > 0 ? res.sales_items.reduce((sum, item) => sum + (item.gross || 0), 0) : 0;
+        const total = res.sales && res.sales.length > 0 ? res.sales.reduce((sum, item) => sum + (item.grosstotal || 0), 0) : 0;
         return {
             id: res.id,
             name: res.name,
