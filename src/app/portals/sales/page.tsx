@@ -26,7 +26,7 @@ export default async function SalesPortalPage() {
         .from('restaurants')
         .select('id, name, slug, restaurant_members!inner(user_id),sales(grosstotal)')
         .eq('restaurant_members.user_id', user.id)
-        .filter('sales.time_end', 'gte', todayStart);
+        .filter('sales.open_date', 'gte', todayStart);
 
     if (error) return <div className="p-4 text-red-500">Error: {error.message}</div>;
 
