@@ -36,7 +36,6 @@ interface EditStoreFormProps {
 export default function EditStoreForm({ store, initialLinkedUsers }: EditStoreFormProps) {
     const router = useRouter()
     const supabase = createClient()
-
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -252,13 +251,13 @@ export default function EditStoreForm({ store, initialLinkedUsers }: EditStoreFo
                     </div>
                 </div>
 
-
-
-                <button disabled={loading} className="w-full bg-black text-white font-bold py-4 rounded-2xl hover:bg-gray-800 transition-all flex justify-center items-center gap-2">
+                <button
+                    disabled={loading}
+                    type = "submit"
+                    className="w-full bg-black text-white font-bold py-4 rounded-2xl hover:bg-gray-800 transition-all flex justify-center items-center gap-2">
                     {loading ? <Loader2 className="animate-spin" /> : 'Save Store & Assignments'}
                 </button>
             </form>
         </div>
-
   )
 }
