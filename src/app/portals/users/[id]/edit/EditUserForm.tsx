@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateUser } from '../../actions'
-import { Loader2, Save } from 'lucide-react'
+import { Loader2, Save, Eye, EyeOff } from 'lucide-react'
 
 export interface UserProfile {
     id: string;
@@ -18,13 +18,15 @@ interface EditUserFormProps {
 }
 
 export default function EditUserForm({ profile }: EditUserFormProps) {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    const router = useRouter()
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setLoading(true)
+      setLoading(true)
+      setError(null)
     
     const formData = new FormData(e.currentTarget)
     const result = await updateUser(profile.id, formData)
@@ -71,12 +73,27 @@ export default function EditUserForm({ profile }: EditUserFormProps) {
        </div>
 
        <div className="space-y-2 opacity-60">
-              <label className="text-sm font-semibold text-gray-600">Password</label>
-              <input
-                  value={profile.password ?? ''}
-                  type="password"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none"
-              />
+              <label className="text-sm font-semibold text-gray-600 flex justify-between">
+                  <span>Password</span>
+                  <span className="text-xs text-gray-400 font-normal">Leave blank to keep unchanged</span>
+              </label>
+              <div className="relative">
+                  <input
+                      name="password"
+                      //value={profile.password ?? ''}
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter new password"
+                      minLength={6}
+                      className="w-full p-3 pr-12 rounded-xl border border-gray-200 focus:border-blue-500 outline-none"
+                  />
+                  <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+              </div>
           </div>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}

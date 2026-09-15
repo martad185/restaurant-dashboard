@@ -49,10 +49,22 @@ export async function updateUser(userId: string, formData: FormData) {
 
     const firstName = formData.get('firstName') as string
     const lastName = formData.get('lastName') as string
+    const password = formData.get('password') as string
+
+    const updatePayload: { user_metadata: { first_name: string; last_name: string }; password?: string } = {
+        user_metadata: { first_name: firstName, last_name: lastName }
+    }
+
+    if (password && password.trim().length > 0) {
+        if (password.length < 6) {
+            return { error: "Password must be at least 6 characters." }
+        }
+        updatePayload.password = password
+    }
 
     const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
         userId,
-        { user_metadata: { first_name: firstName, last_name: lastName } }
+        updatePayload
     )
 
     if (authError) return { error: authError.message }
