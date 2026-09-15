@@ -10,6 +10,7 @@ export interface UserProfile {
     first_name: string | null;
     last_name: string | null;
     email: string;
+    password: string | null;
 }
 
 interface EditUserFormProps {
@@ -67,7 +68,16 @@ export default function EditUserForm({ profile }: EditUserFormProps) {
           disabled 
           className="w-full p-3 rounded-xl border border-gray-100 bg-gray-50 cursor-not-allowed" 
         />
-      </div>
+       </div>
+
+       <div className="space-y-2 opacity-60">
+              <label className="text-sm font-semibold text-gray-600">Password</label>
+              <input
+                  value={profile.password ?? ''}
+                  type="password"
+                  className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none"
+              />
+          </div>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
