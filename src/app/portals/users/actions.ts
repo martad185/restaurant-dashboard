@@ -40,9 +40,6 @@ export async function createUser(formData: FormData) {
 
   if (authError) return { error: authError.message }
 
-  // 2. The profile is likely created by your DB trigger automatically.
-  // If not, you would manually insert into the profiles table here.
-
   revalidatePath('/portals/users')
   return { success: true }
 }
@@ -53,21 +50,12 @@ export async function updateUser(userId: string, formData: FormData) {
     const firstName = formData.get('firstName') as string
     const lastName = formData.get('lastName') as string
 
-    // 1. Update the User Metadata in Auth (so it stays in sync)
     const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
         userId,
         { user_metadata: { first_name: firstName, last_name: lastName } }
     )
 
     if (authError) return { error: authError.message }
-
-    // 2. Update the Profiles table
-    /*const { error: dbError } = await supabaseAdmin
-        .from('profiles')
-        .update({ first_name: firstName, last_name: lastName })
-        .eq('id', userId)
-
-    if (dbError) return { error: dbError.message }*/
 
     revalidatePath('/portals/users')
     return { success: true }
@@ -76,10 +64,6 @@ export async function updateUser(userId: string, formData: FormData) {
 export async function deleteUser(userId: string) {
     const supabaseAdmin = createAdminClient()
 
-    // 1. Delete the user from Supabase Auth
-    // This automatically deletes the user from the auth.users table
-    // and, depending on your foreign key settings (CASCADE), 
-    // it might delete the profile automatically too.
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
 
     if (error) {
@@ -87,7 +71,6 @@ export async function deleteUser(userId: string) {
         return { error: error.message }
     }
 
-    // 2. Refresh the page data
     revalidatePath('/portals/users')
     return { success: true }
 }
