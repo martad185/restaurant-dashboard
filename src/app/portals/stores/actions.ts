@@ -107,5 +107,6 @@ export async function updateStore(
     }
 
     revalidatePath('/portals/stores')
+    revalidatePath(`/portals/stores/${storeId}`)
     return { success: true }
 }

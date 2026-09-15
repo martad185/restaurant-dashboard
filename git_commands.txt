@@ -1,3 +1,3 @@
 git add .
-git commit -m "feat: scaffold nextjs and wire up supabase auth"
-git push origin main
+git commit -m "feat: initial project scaffold"
+git push -u origin main

@@ -111,7 +111,11 @@ export default function EditStoreForm({ store, initialLinkedUsers }: EditStoreFo
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true)
+        setError(null)
+
         const formData = new FormData(e.currentTarget)
+        formData.set('name', storeName)
+        formData.set('slug', slug)
 
         const result = await updateStore(store.id, formData, linkedUsers.map(s => s.id))
         // ... handle result
@@ -161,7 +165,11 @@ export default function EditStoreForm({ store, initialLinkedUsers }: EditStoreFo
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-600">Plan</label>
-                            <select name="plan" className="w-full p-3 rounded-xl border border-gray-200 outline-none bg-white">
+                            <select
+                                name="plan"
+                                defaultValue={store.plan}
+                                className="w-full p-3 rounded-xl border border-gray-200 outline-none bg-white"
+                            >
                                 <option value="Basic">Basic</option>
                                 <option value="Pro">Premium</option>
                             </select>
