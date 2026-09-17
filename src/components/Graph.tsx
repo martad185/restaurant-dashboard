@@ -1,4 +1,4 @@
-'use client'; // This is the magic line
+'use client'; 
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -10,9 +10,9 @@ interface Graph{
     value: number
 }
 
-interface GraphProps {
+/*interface GraphProps {
     ChartData: Graph[]
-}
+}*/
 
 export default function GraphClient({ chartData }: { chartData: Graph[] }) {
     return (
@@ -32,8 +32,7 @@ export default function GraphClient({ chartData }: { chartData: Graph[] }) {
                             ))}
                         </Pie>
                         <Tooltip
-                            formatter={(value: unknown) => [`${Number(value).toLocaleString()}`, 'Gross Sales']}//typeof value === 'number' ? [`€${value.toFixed(2)}`, 'Net Sales'] : [value, 'Net Sales']}
-                            //formatter={(val: unknown) => [`$${Number(val).toLocaleString()}`, 'Gross Sales']}
+                            formatter={(value: unknown) => [`${Number(value).toLocaleString()}`, 'Gross Sales']}
                         />
                     </PieChart>
                 </ResponsiveContainer>

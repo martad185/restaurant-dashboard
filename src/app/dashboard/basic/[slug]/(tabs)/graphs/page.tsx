@@ -107,8 +107,8 @@ export default async function GraphPage({
             {/* Pie Chart Placeholder */}
             <Graph chartData={chartData} />
             <div className="flex justify-between items-center px-4 py-4 bg-gray-50/70">
-                <span className="text-[15px] text-gray-900 font-bold">Total Sales</span>
-                <div className="bg-[#003366] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[75px] text-center">
+                <span className="text-sm text-gray-900 font-bold">Total Sales</span>
+                <div className="bg-[#003366] text-white px-3 py-1 rounded text-sm font-bold min-w-[85px] text-right">
                     {totalGross.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
             </div>
