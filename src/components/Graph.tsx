@@ -32,7 +32,7 @@ export default function GraphClient({ chartData }: { chartData: Graph[] }) {
                             ))}
                         </Pie>
                         <Tooltip
-                            formatter={(value: unknown) => [`$${Number(value).toLocaleString()}`, 'Gross Sales']}//typeof value === 'number' ? [`€${value.toFixed(2)}`, 'Net Sales'] : [value, 'Net Sales']}
+                            formatter={(value: unknown) => [`${Number(value).toLocaleString()}`, 'Gross Sales']}//typeof value === 'number' ? [`€${value.toFixed(2)}`, 'Net Sales'] : [value, 'Net Sales']}
                             //formatter={(val: unknown) => [`$${Number(val).toLocaleString()}`, 'Gross Sales']}
                         />
                     </PieChart>

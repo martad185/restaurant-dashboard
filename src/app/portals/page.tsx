@@ -17,7 +17,6 @@ export default function PortalSelect() {
         if (error) {
             console.error('Error signing out:', error.message);
         } else {
-            // Clear the router cache and redirect to login
             router.refresh();
             router.push('/login');
         }

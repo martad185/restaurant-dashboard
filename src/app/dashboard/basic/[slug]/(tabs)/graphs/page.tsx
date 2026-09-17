@@ -1,8 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+//import Link from 'next/link';
 import Graph from '@/components/Graph';
-import { ArrowLeft, MoreVertical, PieChart } from 'lucide-react';
+import { PieChart } from 'lucide-react';
 import { format, isValid, parseISO } from 'date-fns';
 import Header from '@/components/Header';
 
@@ -17,7 +17,6 @@ export default async function GraphPage({
     const { date } = await searchParams;
     const supabase = await createClient();
 
-    // 1. Strict Validation: If no date is provided, trigger 404 or Error
     if (!date) {
         return (
             <div className="p-10 text-center text-red-600 font-bold">
@@ -26,7 +25,6 @@ export default async function GraphPage({
         ); 
     }
 
-    // 2. Format Validation: Ensure the string is a valid date
     const dateObject = parseISO(date);
     if (!isValid(dateObject)) {
         return (
@@ -45,7 +43,7 @@ export default async function GraphPage({
 
     const multipleRestaurants = (count || 0) > 1;
 
-    // 1. Fetch Restaurant & Sales Data
+    // Fetch Restaurant
     const { data: restaurant } = await supabase
         .from('restaurants')
         .select('id, name')
@@ -53,23 +51,6 @@ export default async function GraphPage({
         .single();
 
     if (!restaurant) notFound();
-
-    /*const { data: sales } = await supabase
-        .from('sales_items')
-        .select('summary_group, gross, qty')
-        .eq('restaurant_id', restaurant.id)
-        .eq('open_date', date)
-        .eq('item_type','Sale_Item');
-        //.gte('time_ord', start)
-    //.lte('time_ord', end);
-    */
-
-    // Inside your Graphs Page component
-    /*const { data: rawItems } = await supabase
-        .from('sales_items')
-        .select('summary_group, gross, qty, item_type')
-        .eq('open_date', date)
-        .in('item_type', ['Sale_Item', 'Voided_Item']); */// Fetch both at once
 
     //Fetch sales by summary group using RPC
     const { data: salesBySummary, error } = await supabase
@@ -91,6 +72,10 @@ export default async function GraphPage({
         
     }[] | null;
 
+    const totalGross = salesSummaryCast
+        ? salesSummaryCast.reduce((sum, row) => sum + (row.summary_total || 0), 0)
+        : 0;
+
     const sumGroupMap = salesSummaryCast
         ? salesSummaryCast.reduce((acc, row) => {
             const name = row.summary_name || 'Other';
@@ -108,56 +93,25 @@ export default async function GraphPage({
     const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
     return (
-        //<div className="flex flex-col min-h-screen bg-white pb-20">
             <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
-            {/* 1. Header - Matching deep navy brand color */}
+            {/* Header*/}
             <Header title="Sales by Summary Group" icon={<PieChart size={20} />} showChangeStore={multipleRestaurants} />
-            {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <Link href={`/dashboard/basic/${slug}`}>
-                        <ArrowLeft size={22} />
-                    </Link>
-                    <div className="flex items-center gap-2">
-                        <PieChart size={20} />
-                        <span className="font-bold text-lg">Graphs</span>
-                    </div>
-                </div>
-                <MoreVertical size={22} />
-            </header>*/}
 
-            {/* 2. Date Title Section */}
+            {/* Date Title Section */}
             <div className="py-4 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-lg">
                     {format(new Date(date), 'EEEE, d MMMM yyyy')}
                 </h2>
             </div>
 
-            {/* 3. Pie Chart Placeholder */}
-            {/* You can integrate a library like Recharts or Nivo here */}
+            {/* Pie Chart Placeholder */}
             <Graph chartData={chartData} />
-
-            {/* 4. Summary Group List */}
-            {/* <div className="w-full px-4 space-y-2">
-                {chartData.map((item, index) => (
-                    <div key={item.name} className="flex justify-between items-center py-3 border-b border-gray-50">
-                        <div className="flex items-center gap-3">
-                            
-                            <div
-                                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px]"
-                                style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                            >
-                                <span className="rotate-180">▶</span>
-                            </div>
-                            <span className="text-[15px] font-medium text-gray-700">{item.name}</span>
-                        </div>
-
-                        <div className="bg-[#3b82f6] text-white px-3 py-1 rounded text-sm font-bold min-w-[85px] text-right">
-                            {item.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                ))}
-            </div >
-            */}
+            <div className="flex justify-between items-center px-4 py-4 bg-gray-50/70">
+                <span className="text-[15px] text-gray-900 font-bold">Total Sales</span>
+                <div className="bg-[#003366] text-white px-2 py-0.5 rounded text-[13px] font-bold min-w-[75px] text-center">
+                    {totalGross.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+            </div>
         </div>
     );
 }

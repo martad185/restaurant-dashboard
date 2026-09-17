@@ -39,7 +39,7 @@ export default async function HourlySalesPage({
 
     const multipleRestaurants = (count || 0) > 1;
 
-    // 1. Fetch Restaurant
+    // Fetch Restaurant
     const { data: restaurant } = await supabase
         .from('restaurants')
         .select('id')
@@ -48,25 +48,25 @@ export default async function HourlySalesPage({
 
     if (!restaurant) notFound();
 
-    // 2. Fetch Global Summary Aggregates (From our previous RPC fix)
+    // Fetch Global Summary Aggregates
     const { data: aggregateData } = await supabase
         .rpc('get_sales_aggregates', { res_id: restaurant.id, target_date: date })
         .single();
 
     const counts = aggregateData as SalesAggregates | null;
 
-    // 3. Fetch Hourly Breakdown
+    // Fetch Hourly Breakdown
     const { data: hourlyData } = await supabase
         .rpc('get_hourly_sales', { res_id: restaurant.id, target_date: date });
 
     const hourlySales = (hourlyData as HourlyRow[] | null) || [];
 
-    // Formatter helpers
+   /* // Formatter helpers
     const formatTime = (isoString: string | null) => {
         if (!isoString) return '--:--';
         return format(new Date(isoString), 'hh:mm a');
     };
-
+    */
     const formatHourLabel = (hour: number) => {
         const parsed = parse(`${hour}`, 'H', new Date());
         return format(parsed, 'hh:mm a');
@@ -76,18 +76,9 @@ export default async function HourlySalesPage({
     const totalGross = hourlySales.reduce((sum, h) => sum + Number(h.hourly_gross), 0);
 
     return (
-        //<div className="flex flex-col min-h-screen bg-[#F0F2F5]">
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
             {/* Dark Navy Header */}
             <Header title="Hourly Sales" icon={<Clock size={22} />} showChangeStore={multipleRestaurants} />
-            {/* <header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <Clock size={22} />
-                    <span className="font-bold text-lg">Hourly Sales</span>
-                </div>
-                <MoreVertical size={22} />
-            </header>
-            */}
             {/* Date Context Ribbon */}
             <div className="bg-white py-3 border-b border-gray-200 text-center">
                 <h2 className="text-[#003366] font-bold text-[17px]">
@@ -99,17 +90,14 @@ export default async function HourlySalesPage({
                 {/* Metrics Dashboard Row */}
                 <div className="grid grid-cols-3 gap-3">
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
-                        {/*<Users size={18} className="text-gray-400 mb-1" />*/}
                         <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Customers</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">{counts?.cust_count || 0}</span>
                     </div>
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
-                        {/*<Receipt size={18} className="text-gray-400 mb-1" />*/}
                         <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Transactions</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">{counts?.transact_count || 0}</span>
                     </div>
                     <div className="bg-white rounded-md p-3 border border-gray-200 shadow-sm flex flex-col items-center text-center">
-                        {/*<ArrowUpRight size={18} className="text-gray-400 mb-1" />*/}
                         <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Avg/Trans</span>
                         <span className="text-base font-bold text-gray-800 mt-0.5">
                             {counts?.transact_count

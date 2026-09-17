@@ -38,7 +38,7 @@ export default function LoginPage() {
 
           if (userError)
           {
-              setError("User role not found or error fetching role." + authData.user.id);
+              setError("User role not found or error getting role from database." + authData.user.id);
               setLoading(false);
           } else if (userRole.role == 'master') {
               router.push('/portals');
@@ -55,7 +55,7 @@ export default function LoginPage() {
               let singleRestaurantId: string | null = null;
 
               if (restaurantsError) {
-                  setError("Error fetching restaurant count." + authData.user.id);
+                  setError("Error getting restaurant count." + authData.user.id);
                   setLoading(false);
               } else if (resCount == 1 && restaurants) {
                   singleRestaurantId = restaurants[0].restaurant_id;
@@ -67,7 +67,7 @@ export default function LoginPage() {
                       .single();
 
                   if (slugError) {
-                      setError("Error fetching restaurant slug." + authData.user.id);
+                      setError("Error getting restaurant slug." + authData.user.id);
                       setLoading(false);
                   } else {
                       router.push(`/dashboard/basic/${slugData.slug}`);
