@@ -59,6 +59,11 @@ export default function AddUserPage() {
                             <input name="email" type="email" required autoComplete="none" className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="firstname@example.com" />
                         </div>
 
+                         <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-600">Username</label>
+                            <input name="username" required className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="username" />
+                        </div>
+
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-600">Password</label>
                             <input name="password" type="password" required autoComplete="new-password" className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none transition-all" placeholder="••••••••" />

@@ -27,7 +27,7 @@ export default async function SalesPage({
 
     const multipleRestaurants = (count || 0) > 1;
 
-    // 1. Fetch Restaurant
+    //Fetch Restaurant
     const { data: restaurant } = await supabase
         .from('restaurants')
         .select('id')
@@ -36,7 +36,7 @@ export default async function SalesPage({
 
     if (!restaurant) notFound();
 
-    // 2. Fetch Sales Data (Grouping by sales_type)
+    // Fetch Sales Data (Grouping by sales_type)
     const { data: rawItems } = await supabase
         .from('sales')
         .select('sales_type, grosstotal')
@@ -46,7 +46,7 @@ export default async function SalesPage({
 
     let runningGrandGross = 0;
 
-    // 3. Aggregate Logic
+    // Aggregate Logic
     const salesBySource = rawItems?.reduce((acc, item) => {
         const source = item.sales_type || 'Other';
         const amount = item.grosstotal || 0;
@@ -61,9 +61,8 @@ export default async function SalesPage({
 
     
     const sortedSales = Object.entries(salesBySource).sort((a, b) => b[1] - a[1]);
-    //const totalTax = Math.max(0, runningGrandGross - runningGrandNet);
     
-    //4. Fetch Refunds Data (Placeholder for now)
+    //Fetch Refunds Data
     const { data: refunds } = await supabase
         .from('sales_items')
         .select('gross')
@@ -71,10 +70,10 @@ export default async function SalesPage({
         .eq('open_date', date)
         .eq('item_type', 'Voided_Item');
 
-    //5. Aggregate Refunds
+    //Aggregate Refunds
     const totalRefunds = refunds?.reduce((acc, item) => acc + (item.gross || 0), 0) || 0;
 
-    //6. Fetch number of transactions & customers (Placeholder for now)
+    //Fetch number of transactions & customers
     const { data: counts, error } = await supabase 
         .rpc('get_sales_aggregates', {
             res_id: restaurant.id,
@@ -83,12 +82,8 @@ export default async function SalesPage({
         .single();
 
     if (error) {
-        //notFound();
         return <div>RPC Error Details:{error.message}, {error.details}, {error.hint}</div>;
-            //console.error("RPC Error Details:", error.message, error.details, error.hint);
     }
-    // Use .single() since it returns exactly one row of summary data
-    // Cast the data directly
     const countsCast = counts as {
         cust_count: number;
         transact_count: number;
@@ -96,23 +91,22 @@ export default async function SalesPage({
         close_time: string | null;
     } | null;
 
-    // Access your fields cleanly
     const custCount = countsCast?.cust_count || 0;
     const transactCount = countsCast?.transact_count || 0;
     const avgSalePerTransact = transactCount > 0 ? runningGrandGross / transactCount : 0;
     const openTime = countsCast?.open_time || null;
     const closeTime = countsCast?.close_time || null;
 
-    // 1. Fallback default if openTime is null or undefined
+    // Fallback default if openTime is null or undefined
     let formattedOpenTime = '--:--';
     let formattedCloseTime = '--:--';
 
     if (openTime) {
-        // If your database returns a full ISO timestamp string (e.g., "2026-05-17T08:30:00Z")
+        // If database returns a full ISO timestamp string (e.g., "2026-05-17T08:30:00Z")
         if (openTime.includes('T')) {
             formattedOpenTime = format(new Date(openTime), 'hh:mm a');
         }
-        // If your database returns a plain time string (e.g., "08:30:00" or "14:45:00")
+        // If database returns a plain time string (e.g., "08:30:00" or "14:45:00")
         else {
             const parsedTime = parse(openTime.substring(0, 5), 'HH:mm', new Date());
             formattedOpenTime = format(parsedTime, 'hh:mm a');
@@ -120,11 +114,11 @@ export default async function SalesPage({
     }
 
     if (closeTime) {
-        // If your database returns a full ISO timestamp string (e.g., "2026-05-17T08:30:00Z")
+        // If database returns a full ISO timestamp string (e.g., "2026-05-17T08:30:00Z")
         if (closeTime.includes('T')) {
             formattedCloseTime = format(new Date(closeTime), 'hh:mm a');
         }
-        // If your database returns a plain time string (e.g., "08:30:00" or "14:45:00")
+        // If database returns a plain time string (e.g., "08:30:00" or "14:45:00")
         else {
             const parsedTime = parse(closeTime.substring(0, 5), 'HH:mm', new Date());
             formattedOpenTime = format(parsedTime, 'hh:mm a');
@@ -133,17 +127,8 @@ export default async function SalesPage({
 
     return (
         <div className="flex-1 bg-white max-w-4xl mx-auto w-full border-x border-gray-300">
-            {/*<div className="flex flex-col min-h-screen bg-[#F0F2F5]">*/}
             {/* Dark Navy Header */}
             <Header title="Sales by Sales Type" icon={<BarChart2 size={22} />} showChangeStore={multipleRestaurants} />
-            {/*<header className="bg-[#003366] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <BarChart2 size={22} />
-                    <span className="font-bold text-lg">Sales</span>
-                </div>
-                <MoreVertical size={22} />
-            </header>
-            */}
             {/* Date Display */}
             <div className="bg-white py-3 border-b border-gray-200 text-center">
                 

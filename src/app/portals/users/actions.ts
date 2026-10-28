@@ -26,6 +26,7 @@ export async function createUser(formData: FormData) {
   const password = formData.get('password') as string
   const firstName = formData.get('firstName') as string
   const lastName = formData.get('lastName') as string
+  const username = formData.get('username') as string 
 
   // 1. Create the user in Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
@@ -34,7 +35,8 @@ export async function createUser(formData: FormData) {
       email_confirm: true,
       user_metadata: {
         first_name: firstName,
-        last_name: lastName
+        last_name: lastName,
+        username: username
       },
   })
 
