@@ -6,18 +6,10 @@ import { createAdminClient } from '@/lib/supabase/admin'
 //import { createClient } from '@/lib/supabase/client'
 import { revalidatePath } from 'next/cache'
 
+
+/**Create User **/
 export async function createUser(formData: FormData) {
 
-  /*  //1. check if the user is an admin and authorized to create users
-    const supabaseClient = await createClient()
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
-    if (userError) {
-        return { error: "Failed to authenticate user" }
-    }
-    // Check if user has admin role in your DB before proceeding
-    if (!user || user.email !== 'helpdesk@slowey.ie') {
-        return { error: "Unauthorized" }
-    }*/
 
     const supabase = await createAdminClient()
 
@@ -28,7 +20,18 @@ export async function createUser(formData: FormData) {
   const lastName = formData.get('lastName') as string
   const username = formData.get('username') as string 
 
-  // 1. Create the user in Supabase Auth
+  // 1. Check if username already exists in the profiles table
+    const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('id')
+        .ilike('username', username) // case-insensitive check
+        .maybeSingle()
+
+    if (existingUser) {
+        return { error: "This username is already taken. Please choose another one." }
+    }
+
+  // 2. Create the user in Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
     email,
     password,
@@ -46,15 +49,30 @@ export async function createUser(formData: FormData) {
   return { success: true }
 }
 
+
+/**Update User **/
 export async function updateUser(userId: string, formData: FormData) {
     const supabaseAdmin = createAdminClient()
 
     const firstName = formData.get('firstName') as string
     const lastName = formData.get('lastName') as string
     const password = formData.get('password') as string
+    const username = formData.get('username') as string
 
-    const updatePayload: { user_metadata: { first_name: string; last_name: string }; password?: string } = {
-        user_metadata: { first_name: firstName, last_name: lastName }
+    // 1. Check if username is already taken by *another* user
+    const { data: existingUser } = await supabaseAdmin
+        .from('profiles')
+        .select('id')
+        .ilike('username', username)
+        .neq('id', userId) // exclude the current user being edited
+        .maybeSingle()
+
+    if (existingUser) {
+        return { error: "This username is already taken by another user." }
+    }
+
+    const updatePayload: { user_metadata: { username?: string; first_name: string; last_name: string }; password?: string } = {
+        user_metadata: { username, first_name: firstName, last_name: lastName }
     }
 
     if (password && password.trim().length > 0) {
@@ -75,6 +93,7 @@ export async function updateUser(userId: string, formData: FormData) {
     return { success: true }
 }
 
+/**Delete User **/
 export async function deleteUser(userId: string) {
     const supabaseAdmin = createAdminClient()
 
