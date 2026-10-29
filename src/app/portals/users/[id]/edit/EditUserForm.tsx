@@ -77,7 +77,7 @@ export default function EditUserForm({ profile }: EditUserFormProps) {
         <label className="text-sm font-semibold text-gray-600">Username</label>
         <input 
           name="username"
-          value={profile.username ?? ''} 
+          defaultValue={profile.username ?? ''} 
           required
           className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none" 
         />
