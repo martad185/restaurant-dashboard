@@ -52,12 +52,21 @@ export async function createUser(formData: FormData) {
 
 /**Update User **/
 export async function updateUser(userId: string, formData: FormData) {
+
+    if(!userId) {|| userId === "undefined"){
+       return { error: "Invalid user ID provided." }
+    }
+
     const supabaseAdmin = createAdminClient()
 
     const firstName = formData.get('firstName') as string
     const lastName = formData.get('lastName') as string
     const password = formData.get('password') as string
-    const username = formData.get('username') as string
+    const username = (formData.get('username') as string)?.trim()
+
+    if (!username) {
+        return { error: "Username is required." }
+    }
 
     // 1. Check if username is already taken by *another* user
     const { data: existingUser } = await supabaseAdmin

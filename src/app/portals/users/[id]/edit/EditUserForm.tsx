@@ -78,6 +78,7 @@ export default function EditUserForm({ profile }: EditUserFormProps) {
         <input 
           name="username"
           defaultValue={profile.username ?? ''} 
+          placeholder="Enter username"
           required
           className="w-full p-3 rounded-xl border border-gray-200 focus:border-blue-500 outline-none" 
         />

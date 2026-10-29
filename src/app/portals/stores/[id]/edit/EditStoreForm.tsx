@@ -92,11 +92,15 @@ export default function EditStoreForm({ store, initialLinkedUsers }: EditStoreFo
                 /*const unassigned = data.filter(
                     (profile: Profile) => !profile.restaurant_members || profile.restaurant_members.length === 0
                 )*/
-                setAvailableUsers(data)
+                // Filter out users who are already in initialLinkedUsers
+                const linkedIds = new Set(initialLinkedUsers.map(u => u.id));
+                const unassigned = data.filter((profile: Profile) => !linkedIds.has(profile.id));
+
+                setAvailableUsers(unassigned)
             }
         }
         getUnassignedUsers()
-    }, [])
+    }, [initialLinkedUsers])
 
     const linkUser = (user: Profile) => {
         setLinkedUsers([...linkedUsers, user])
