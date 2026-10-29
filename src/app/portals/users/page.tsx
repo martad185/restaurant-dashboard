@@ -17,7 +17,7 @@ export default async function UsersPortalPage() {
     // 2. Fetch users, excluding the logged-in user
     const { data: users, error } = await supabase
         .from('profiles')
-        .select('id, first_name, last_name, email, full_name')
+        .select('id, first_name, last_name, email, full_name, username')
         .neq('id', user?.id) // Filter out the logged-in user
         .order('first_name', { ascending: true })
         .order('last_name', { ascending: true }); // Order by first_name and then last_name
@@ -84,6 +84,7 @@ export default async function UsersPortalPage() {
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">First Name</th>
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Last Name</th>
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Email Address</th>
+                                    <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Username</th>
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -93,6 +94,7 @@ export default async function UsersPortalPage() {
                                         <td className="py-5 px-8 font-semibold text-black">{userItem.first_name}</td>
                                         <td className="py-5 px-8 font-semibold text-black">{userItem.last_name}</td>
                                         <td className="py-5 px-8 text-gray-800 font-mono text-sm">{userItem.email}</td>
+                                        <td className="py-5 px-8 text-gray-800 font-mono text-sm">{userItem.username}</td>
                                         <td className="py-5 px-8 text-right flex justify-end gap-3">
                                             <Link href={`/portals/users/${userItem.id}/edit`}>
                                                 <button className="p-2.5 rounded-lg text-blue-600 bg-[#EFF6FF] hover:bg-blue-100"><Edit2 size={16} /></button>

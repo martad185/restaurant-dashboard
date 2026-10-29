@@ -61,10 +61,15 @@ interface Profile {
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] p-4 md:p-12">
-            <EditStoreForm
-                store={storeData}
-                initialLinkedUsers={initialLinkedUsers}
-            />
+            <div className="max-w-2xl mx-auto">
+                <Link href="/portals/stores" className="flex items-center gap-2 text-gray-500 hover:text-black mb-8">
+                    <ChevronLeft size={20} /> Back to Stores
+                </Link>
+                <EditStoreForm
+                    store={storeData}
+                    initialLinkedUsers={initialLinkedUsers}
+                />
+            </div>
         </div>
     )
 }
