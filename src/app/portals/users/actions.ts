@@ -53,7 +53,7 @@ export async function createUser(formData: FormData) {
 /**Update User **/
 export async function updateUser(userId: string, formData: FormData) {
 
-    if(!userId) {|| userId === "undefined"){
+    if(!userId || userId === "undefined"){
        return { error: "Invalid user ID provided." }
     }
 
