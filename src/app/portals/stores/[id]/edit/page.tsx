@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import EditStoreForm from './EditStoreForm'
-import { link } from 'node:fs/promises';
+import Link from 'next/link'
 
 
 interface RestaurantMember {
