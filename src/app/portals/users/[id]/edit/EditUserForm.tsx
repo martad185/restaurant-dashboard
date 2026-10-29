@@ -73,7 +73,7 @@ export default function EditUserForm({ profile }: EditUserFormProps) {
         />
        </div>
 
-       <div className="space-y-2 opacity-60">
+       <div className="space-y-2">
         <label className="text-sm font-semibold text-gray-600">Username</label>
         <input 
           name="username"

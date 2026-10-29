@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { UserPlus, Store, Loader2, Check, X, Search, ChevronDown, LinkIcon } from 'lucide-react'
+import { UserPlus, Store, Loader2, Check, X, Search, ChevronDown, LinkIcon, ChevronLeft } from 'lucide-react'
 import { createStoreWithUsers } from '../actions'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 
 interface Profile {
@@ -126,6 +127,10 @@ export default function AddStorePage() {
 
     return (
         <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-2xl mx-auto">
+                <Link href="/portals/stores" className="flex items-center gap-2 text-gray-500 hover:text-black mb-8 transition-colors">
+                    <ChevronLeft size={20} /> Back to Stores
+                </Link>
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
@@ -296,6 +301,7 @@ export default function AddStorePage() {
                     {loading ? <Loader2 className="animate-spin" /> : 'Save Store & Assignments'}
                 </button>
             </form>
+        </div>
         </div>
     )
 }
