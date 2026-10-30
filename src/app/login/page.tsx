@@ -28,16 +28,17 @@ export default function LoginPage() {
         .select("email")
         .ilike("username", targetEmail)
         .maybeSingle();
-    }
+    
 
-if (profileError || !profile?.email) {
-        setError("Invalid username or email address.");
-        setLoading(false);
-        return;
-}
+        if (profileError || !profile?.email) {
+            setError("Invalid username or email address.");
+            setLoading(false);
+            return;
+        }
 
-      // Found matching email for the username
-      targetEmail = profile.email;
+        // Found matching email for the username
+        targetEmail = profile.email;
+   }
 
 
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
