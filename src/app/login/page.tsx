@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,8 +19,28 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
+ let targetEmail = identifier.trim();
+
+// 2. Check if input is a username (doesn't contain '@')
+    if (!targetEmail.includes("@")) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("email")
+        .ilike("username", targetEmail)
+        .maybeSingle();
+
+if (profileError || !profile?.email) {
+        setError("Invalid username or email address.");
+        setLoading(false);
+        return;
+      }
+
+      // Found matching email for the username
+      targetEmail = profile.email;
+
+
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email,
+      email: targetEmail,
       password,
     });
 
@@ -91,13 +111,13 @@ export default function LoginPage() {
               </h1>        
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-white">Email</label>
+            <label className="block text-sm font-medium text-white">Email or Username</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none text-white"
-              placeholder="chef@restaurant.com"
+              placeholder="username or chef@restaurant.com"
               required
             />
           </div>
