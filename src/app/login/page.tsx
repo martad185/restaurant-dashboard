@@ -23,21 +23,20 @@ export default function LoginPage() {
 
 // 2. Check if input is a username (doesn't contain '@')
     if (!targetEmail.includes("@")) {
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("email")
-        .ilike("username", targetEmail)
-        .maybeSingle();
+     
+        // Call the safe database RPC function
+      const { data: resolvedEmail, error: rpcError } = await supabase
+        .rpc("get_email_by_username", { p_username: targetEmail });
     
 
-        if (profileError || !profile?.email) {
+        if (rpcError || !resolvedEmail) {
             setError("Invalid username or email address.");
             setLoading(false);
             return;
         }
 
         // Found matching email for the username
-        targetEmail = profile.email;
+        targetEmail = resolvedEmail;
    }
 
 
