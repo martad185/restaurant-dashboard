@@ -119,6 +119,7 @@ export default function EditStoreForm({ store, initialLinkedUsers }: EditStoreFo
 
         const formData = new FormData(e.currentTarget)
         formData.set('name', storeName)
+        formData.set('plan', formData.get('plan') as string)
         formData.set('slug', slug)
 
         const result = await updateStore(store.id, formData, linkedUsers.map(s => s.id))
