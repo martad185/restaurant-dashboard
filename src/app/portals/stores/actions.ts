@@ -67,8 +67,8 @@ export async function createStoreWithUsers(formData: FormData, selectedUserIds: 
         if (membersError) return { error: `Store created, but failed to link users: ${membersError.message}` }
     }
 
-    revalidatePath('/portal/stores')
-    revalidatePath('/portal/users')
+    revalidatePath('/portals/stores')
+    revalidatePath('/portals/users')
     return { success: true }
 }
 
@@ -106,7 +106,7 @@ export async function updateStore(
         if (memberError) return { error: memberError.message }
     }
 
-    revalidatePath('/portals/stores')
-    revalidatePath(`/portals/stores/${storeId}`)
+    revalidatePath('/portals/stores', 'page')
+    revalidatePath(`/portals/stores/${storeId}`, 'page')
     return { success: true }
 }
