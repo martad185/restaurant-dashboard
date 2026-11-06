@@ -110,8 +110,8 @@ export default async function StoresPage({
                 <div className="hidden md:block">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                                <tr className="bg-gray-50/50 border-b border-gray-100">
-
+                           <tr className="bg-gray-50/50 border-b border-gray-100">
+                                <th className="px-8 py-5 text-sm font-semibold text-gray-400 uppercase tracking-wider w-16">#</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Store Name</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider text-center">Number of Users</th>
                                 <th className="px-8 py-5 text-sm font-semibold text-gray-500 uppercase tracking-wider">Plan</th>
@@ -121,6 +121,10 @@ export default async function StoresPage({
                         <tbody className="divide-y divide-gray-50">
                             {stores?.map((store) => (
                                 <tr key={store.id} className="hover:bg-blue-50/30 transition-colors group">
+                                    {/* Incremental Number Column */}
+                                    <td className="px-6 py-6 text-gray-400 font-semibold text-sm">
+                                        {index + 1}
+                                    </td>
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-4">
                                             <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600">
