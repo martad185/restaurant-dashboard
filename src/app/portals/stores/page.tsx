@@ -1,17 +1,37 @@
 
 
 import { createClient } from '@/lib/supabase/server'
-import { Plus, Store, Edit2, Users, Grid3X3, ShieldCheck, LogOut } from 'lucide-react'
+import { Plus, Store, Edit2, Users, Grid3X3, ShieldCheck, Search } from 'lucide-react'
 import Link from 'next/link'
 import DeleteStoreButton from './DeleteStoreButton'
 import LogoutButton from '@/components/LogoutButton'
 
 
-export default async function StoresPage() {
+export default async function StoresPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ query?: string }>
+}) {
+    const resolvedParams = await searchParams;
+    const searchQuery = resolvedParams.query || '';
     const supabase = await createClient()
 
+    //Build the query to fetch stores based on the search query
+    let query = supabase.from('restaurants')
+                        .select(`
+                             *,
+                             restaurant_members!inner(count) 
+                        `)
+                        .not('restaurant_members.role', 'eq', 'master');
+    
+    // If there's a search query, filter the stores by name
+    if (searchQuery) {
+        query = query.ilike('name', `%${searchQuery}%`);
+    }
+
+    const { data: stores, error } = await query.order('name', { ascending: true });
     // Fetch stores and count related profiles in one go
-    const { data: stores, error } = await supabase
+    /*const { data: stores, error } = await supabase
         .from('restaurants')
         .select(`
       *,
@@ -19,7 +39,7 @@ export default async function StoresPage() {
     `)
         .not('restaurant_members.role', 'eq', 'master')
         .order('name', { ascending: true })
-
+    */
     if (error) return (<div className="p-8 text-center text-red-500">Failed to load companies: {error.message}</div>);
 
     return (
@@ -44,12 +64,6 @@ export default async function StoresPage() {
                         Users
                     </Link>
                     <LogoutButton />
-                    {/*<button
-                        onClick={handleSignOut}
-                        className="text-gray-600 hover:text-red-500 flex items-center gap-2">
-                        <LogOut size={18} />
-                        Logout
-                    </button>*/}
                 </div>
             </nav>
 
@@ -74,20 +88,21 @@ export default async function StoresPage() {
                     </Link>
                 </div>
 
-                {/* <div className="max-w-6xl mx-auto">
-                
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-                    <div>
-                        <h1 className="text-3xl font-extrabold text-black tracking-tight">Stores</h1>
-                        <p className="text-gray-500 mt-1">Manage locations and users linked with locations</p>
-                    </div>
-                    <Link href="/portals/stores/add">
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-100">
-                            <Plus size={20} /> Add Store
-                        </button>
-                    </Link>
+                {/* Search Bar Component / Form */}
+                <div className="mb-6">
+                    <form method="GET" className="relative max-w-md">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400">
+                            <Search size={18} />
+                        </span>
+                        <input
+                            type="text"
+                            name="query"
+                            defaultValue={searchQuery}
+                            placeholder="Search stores by name..."
+                            className="w-full pl-11 pr-4 py-3 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:border-blue-500 text-sm shadow-sm transition-all"
+                        />
+                    </form>
                 </div>
-            */}
 
 
                 <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-100/50">
