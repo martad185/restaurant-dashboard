@@ -119,7 +119,8 @@ export default async function StoresPage({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
-                            {stores?.map((store) => (
+                            {stores && stores.length > 0 ? (
+                                stores.map((store, index) => (
                                 <tr key={store.id} className="hover:bg-blue-50/30 transition-colors group">
                                     {/* Incremental Number Column */}
                                     <td className="px-6 py-6 text-gray-400 font-semibold text-sm">
@@ -159,17 +160,29 @@ export default async function StoresPage({
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={5} className="text-center py-12 text-gray-400">
+                                    No stores found matching your search.
+                                </td>
+                            </tr> 
+                        )}
                         </tbody>
                     </table>
                 </div>
 
                 {/* Mobile List View */}
                 <div className="md:hidden space-y-4">
-                    {stores?.map((store) => (
+                    {stores && stores.length > 0 ? (
+                        stores?.map((store) => (
                         <div key={store.id} className="p-5 rounded-3xl shadow-sm border border-gray-100">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex items-center gap-3">
+                                    {/* Incremental Number Badge for Mobile */}
+                                    <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">
+                                           #{index + 1}
+                                    </span>
                                     <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
                                         <Store size={18} />
                                     </div>
@@ -189,7 +202,10 @@ export default async function StoresPage({
                                 <DeleteStoreButton storeId={store.id} storeName={store.name} />
                             </div>
                         </div>
-                    ))}
+                    ))
+                    ) : (
+                        <p className="text-center py-8 text-gray-400">No stores found matching your search.</p>
+                    )}
                     </div>
                 </div>
             </main>
