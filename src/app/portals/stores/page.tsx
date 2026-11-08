@@ -175,7 +175,7 @@ export default async function StoresPage({
                 {/* Mobile List View */}
                 <div className="md:hidden space-y-4">
                     {stores && stores.length > 0 ? (
-                        stores?.map((store) => (
+                        stores?.map((store, index) => (
                         <div key={store.id} className="p-5 rounded-3xl shadow-sm border border-gray-100">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex items-center gap-3">
