@@ -65,8 +65,9 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
                                 <X size={14} />
                             </button>
                         )}
+                         <LogoutButton />
                     </div>
-                    <LogoutButton />
+                   
                 </div>
             </header>
 
