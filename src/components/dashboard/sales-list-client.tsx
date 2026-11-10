@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Home, Search, X, Store } from 'lucide-react';
-import { LogoutButton } from '../components/LogoutButton';
+import { LogoutButton } from '../LogoutButton';
 
 interface RestaurantSales {
   id: string;
