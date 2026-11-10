@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Home, Search, X, Store } from 'lucide-react';
+import { LogoutButton } from '@/components/LogoutButton';
 
 interface RestaurantSales {
   id: string;
@@ -65,6 +66,7 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
                             </button>
                         )}
                     </div>
+                    <LogoutButton />
                 </div>
             </header>
 

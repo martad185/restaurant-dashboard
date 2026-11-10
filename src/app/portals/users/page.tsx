@@ -147,7 +147,7 @@ export default async function UsersPortalPage({
                            ) : (
                                 <tr>
                                     <td colSpan={6} className="py-5 px-8 text-center text-gray-500">
-                                        No users found matching your s.
+                                        No users found matching your search criteria.
                                     </td>
                                 </tr>
                             ) }
