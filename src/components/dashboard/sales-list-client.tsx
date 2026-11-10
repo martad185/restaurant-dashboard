@@ -40,8 +40,11 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
                         <Home size={16} className="text-gray-700" />
                         <h1 className="text-sm font-bold text-gray-800 uppercase tracking-tight">Select Store</h1>
                     </div>
-                    <div className="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
-                        {initialData.length} LOCATIONS
+                    <div className="flex items-center gap-3">
+                        <div className="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                            {initialData.length} LOCATIONS
+                        </div>
+                        <LogoutButton />
                     </div>
                 </div>
 
@@ -65,7 +68,7 @@ export function SalesListClient({ initialData, dayName }: SalesListProps) {
                                 <X size={14} />
                             </button>
                         )}
-                         <LogoutButton />
+                         
                     </div>
                    
                 </div>
