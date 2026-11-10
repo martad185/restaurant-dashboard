@@ -1,27 +1,46 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Edit2, UserPlus, Users, Grid3X3, ShieldCheck } from 'lucide-react';
+import { Edit2, UserPlus, Users, Grid3X3, ShieldCheck, Search } from 'lucide-react';
 import DeleteUserButton from './DeleteUserButton'
 import LogoutButton from '../../../components/LogoutButton';
 
 
-export default async function UsersPortalPage() {
+export default async function UsersPortalPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ query?: string }>
+}) {
+    const reslovedSearchParams = await searchParams;
+    const searchQuery = reslovedSearchParams.query || '';
     const supabase = await createClient();
     
 
     // 1. Get current user's ID
     const { data: { user } } = await supabase.auth.getUser();
 
+    //2. Build the query based on the search parameter
+    let query = supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email, full_name, username')
+        .neq('id', user?.id);
 
+    //3. Apply search filter if a query is provided
+    if (searchQuery) {
+        query = query.or(`first_name.ilike.%${searchQuery}%,last_name.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%,username.ilike.%${searchQuery}%`);
+    }
+
+    const { data: users, error } = await query
+        .order('first_name', { ascending: true })
+        .order('last_name', { ascending: true });
 
     // 2. Fetch users, excluding the logged-in user
-    const { data: users, error } = await supabase
+   /* const { data: users, error } = await supabase
         .from('profiles')
         .select('id, first_name, last_name, email, full_name, username')
         .neq('id', user?.id) // Filter out the logged-in user
         .order('first_name', { ascending: true })
         .order('last_name', { ascending: true }); // Order by first_name and then last_name
-
+*/
     if (error) return (<div className="p-8 text-center text-red-500">Failed to load users: {error.message}</div>);
     
 
@@ -73,6 +92,22 @@ export default async function UsersPortalPage() {
                     </Link>
                 </div>
 
+                {/* Search Bar Component / Form */}
+                <div className="mb-6">
+                    <form method="GET" className="relative max-w-md">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400">
+                            <Search size={18} />
+                        </span>
+                        <input
+                            type="text"
+                            name="query"
+                            defaultValue={searchQuery}
+                            placeholder="Search by name, email, or username..."
+                            className="w-full pl-11 pr-4 py-3 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:border-blue-500 text-sm shadow-sm transition-all"
+                        />
+                    </form>
+                </div>
+
                 {/* 3. The Main Data Container */}
                 <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-100/50">
 
@@ -81,6 +116,7 @@ export default async function UsersPortalPage() {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-gray-50/50 border-b border-gray-100">
+                                    <th className="py-5 px-6 text-sm font-semibold text-gray-400 uppercase tracking-wider w-16">#</th>
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">First Name</th>
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Last Name</th>
                                     <th className="py-5 px-8 text-sm font-semibold text-gray-500 uppercase tracking-wider">Email Address</th>
@@ -89,8 +125,10 @@ export default async function UsersPortalPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users?.map((userItem) => (
+                                {users && users.length > 0 ? (
+                                    users?.map((userItem, index) => (
                                     <tr key={userItem.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
+                                        <td className="py-5 px-8 font-semibold text-black">{index + 1}</td>
                                         <td className="py-5 px-8 font-semibold text-black">{userItem.first_name}</td>
                                         <td className="py-5 px-8 font-semibold text-black">{userItem.last_name}</td>
                                         <td className="py-5 px-8 text-gray-800 font-mono text-sm">{userItem.email}</td>
@@ -105,16 +143,35 @@ export default async function UsersPortalPage() {
                                             />
                                         </td>
                                     </tr>
-                                ))}
+                                ))
+                           ) : (
+                                <tr>
+                                    <td colSpan={6} className="py-5 px-8 text-center text-gray-500">
+                                        No users found matching your s.
+                                    </td>
+                                </tr>
+                            ) }
                             </tbody>
                         </table>
                     </div>
 
                     {/* MOBILE LIST: Visible only on small screens (block md:hidden) */}
                     <div className="block md:hidden space-y-4">
-                        {users?.map((userItem) => (
+                        {users && users.length > 0 ? (
+                            users?.map((userItem, index) => (
                             <div key={userItem.id} className="p-4 border border-gray-100 rounded-2xl bg-[#FDFDFD]">
                                 <div className="flex justify-between items-start mb-3">
+                                   <div className="flex items-center gap-3">
+                                            <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">
+                                                #{index + 1}
+                                            </span>
+                                            <div>
+                                                <p className="text-lg font-bold text-black">
+                                                    {userItem.full_name || `${userItem.first_name || ''} ${userItem.last_name || ''}`}
+                                                </p>
+                                                <p className="text-xs text-blue-600 font-mono">@{userItem.username || 'no-username'}</p>
+                                            </div>
+                                    </div>
                                     <div className="flex gap-2">
                                         <Link href={`/portals/users/${userItem.id}/edit`}>
                                             <button className="p-2 rounded-lg text-blue-600 bg-[#EFF6FF]"><Edit2 size={14} /></button>
@@ -123,14 +180,18 @@ export default async function UsersPortalPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-lg font-bold text-black">{userItem.full_name} </p>
                                     <p className="text-sm text-gray-500 break-all">{userItem.email}</p>
                                 </div>
                             </div>
-                        ))}
+                        ))
+                ) :(
+                    <div className="p-4 text-center text-gray-500">
+                        No users found matching your search criteria.
                     </div>
-                </div>
-            </main>
+                )}
+            </div>
+        </div>
+    </main>
 
             {/* 4. Footer (Similar to image_1.png) */}
             <footer className="text-center text-sm text-gray-400 py-10">
